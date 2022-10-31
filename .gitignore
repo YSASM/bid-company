@@ -1,0 +1,8 @@
+.idea
+.venv
+env
+test.py
+log
+__pycache__
+.vscode
+test.html
