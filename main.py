@@ -2,7 +2,7 @@
 # encoding:utf-8
 import json,logging
 from logging import handlers
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from service import service
 from config import Config
 class Main(object):
@@ -40,13 +40,14 @@ class Main(object):
     def list():
         words = request.args.get('words')
         ren = Main.s.get('list',words)
-        return json.dumps(ren,ensure_ascii=False)
+        return jsonify(ren)
 
     @api.route('/details',methods=['get'])
     def details():
         words = request.args.get('words')
-        ren = Main.s.get('detail',words)
-        return json.dumps(ren,ensure_ascii=False)
+        ip = request.remote_addr
+        ren = Main.s.get('detail',words,ip)
+        return jsonify(ren)
     
 if __name__ == '__main__':
     main = Main()

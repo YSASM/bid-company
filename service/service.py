@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import os
@@ -20,20 +21,29 @@ class Service(object):
         message.append(exp)
         MessageService.send_text("\n".join(message), receiver)
 
-    def get(self,method,words):
+    def get(self,method,words,ip):
+        exp = ''
         if method == 'detail':
+            id = str(int(time.time()))+'#'+ip.replace('.','')
             for i in self.detail:
                 try:
                     self.d = i()
                     data = self.d.run(words)
                 except:
-                    exp = traceback.format_exc()
-                    # self.send_alarm("Error", exp, Config.get_val('admin', 'jiangyong,jianghuanhuan,wujiefeng'))
+                    exp += traceback.format_exc()
+                    exp += ' '
                     continue
-                if not data:
+                try:
+                    data = json.loads(data)
+                except:
+                    exp += traceback.format_exc()
+                    exp += ' '
                     continue
-                return {'code':'ok','data':data}
-            return {'code':'error'}
+                if exp!="":
+                    logging.error(exp)
+                return {'code':0,'msg':'操作成功。,id:%s,请求ip：%s'%('0#'+id,ip),'data':data}
+            logging.error(exp)
+            return {'code':1,'msg':'操作成功。,id:%s,请求ip：%s'%('1#'+id,ip),'data':exp}
         elif method == 'list':
             for i in self.list:
                 try:
