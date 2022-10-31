@@ -36,19 +36,16 @@ class Main(object):
         ren = {'msg':'成功访问首页','msg_code':200}
         #json.dumps 序列化时对中文默认使用的ascii编码.想输出中文需要指定ensure_ascii=False
         return json.dumps(ren,ensure_ascii=False)
-    @api.route('/list',methods=['post'])
+    @api.route('/list',methods=['get'])
     def list():
-        form = request.form
-        ren = Main.s.get('list',form['words'])
-        try:
-            return json.dumps(ren,ensure_ascii=False)
-        except:
-            return {'code':'error','msg':'api Error!'}
+        words = request.args.get('words')
+        ren = Main.s.get('list',words)
+        return json.dumps(ren,ensure_ascii=False)
 
-    @api.route('/details',methods=['post'])
+    @api.route('/details',methods=['get'])
     def details():
-        form = request.form
-        ren = Main.s.get('detail',form['words'])
+        words = request.args.get('words')
+        ren = Main.s.get('detail',words)
         return json.dumps(ren,ensure_ascii=False)
     
 if __name__ == '__main__':
