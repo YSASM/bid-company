@@ -39,7 +39,8 @@ class Main(object):
     @api.route('/list',methods=['get'])
     def list():
         words = request.args.get('words')
-        ren = Main.s.get('list',words)
+        ip = request.remote_addr
+        ren = Main.s.get('list',words,ip)
         return jsonify(ren)
 
     @api.route('/details',methods=['get'])
