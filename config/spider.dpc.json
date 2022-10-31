@@ -1,8 +1,0 @@
-{
-  "db": "mysql+mysqlconnector://bid_test:jirhehPx4KCPmFjx@119.3.13.144:9326/bid_test_dpc",
-  "admin": "dingpengcheng",
-  "sender": "1000006",
-  "statistic": "0",
-  "cjyaccount": "qiansan",
-  "cjypassword": "sange666"
-}
