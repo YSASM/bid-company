@@ -62,10 +62,10 @@ class ApiBase(object):
         if back_code == 'pass':
             return None
         elif back_code == 'error':
-            logging.warning(f"【{self.source.name}】【{self.source.spider}】【网络超时】 ：url : {url},error:{back_content}")
+            logging.warning(f"【网络超时】 ：url : {url},error:{back_content}")
             return None
         elif back_code == 'bad':
-            logging.warning(f"【{self.source.name}】【{self.source.spider}】【网络错误】 ：url : {url},error:{back_content}")
+            logging.warning(f"【网络错误】 ：url : {url},error:{back_content}")
             return None
         elif back_code == 'ok':
             return back_content
