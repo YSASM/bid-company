@@ -23,13 +23,13 @@ class Qichacha_list(object):
             trs = html.find('div',class_='cominfo-normal').find_all('tr')
         except:
             if '公司不存在' in response.text:
-                return {'status':1,'name':'公司不存在'}
+                return json.dumps({'status':1,'name':'公司不存在'})
             elif'会员登陆' in response.text:
-                return {'status':1,'name':'需要登陆'}
+                return json.dumps({'status':1,'name':'需要登陆'})
             elif'验证码' in response.text:
-                return {'status':1,'name':'需要验证码'}
+                return json.dumps({'status':1,'name':'需要验证码'})
             else:
-                return {'status':1,'name':'未知错误:'+traceback.format_exc()}
+                return json.dumps({'status':1,'name':'未知错误:'+traceback.format_exc()})
         temp = []
         for tr in trs:
             td = tr.find_all('td')
