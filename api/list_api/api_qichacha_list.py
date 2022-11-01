@@ -12,6 +12,7 @@ class Qichacha_list(object):
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
             'cookie': f'QCCSESSID={QCCSESSID};',
+            'referer': 'https://www.qcc.com/',
         }
     def run(self,words):
         url = 'https://www.qcc.com/firm/%s.html' % words
@@ -20,7 +21,7 @@ class Qichacha_list(object):
         try:
             trs = html.find('div',class_='cominfo-normal').find_all('tr')
         except:
-            raise ApiError('需要验证码！')
+            raise ApiError('ApiError')
         temp = []
         for tr in trs:
             td = tr.find_all('td')
@@ -35,7 +36,7 @@ class Qichacha_list(object):
             'approval_date' : temp[5][5].text.replace(' ',''),
             'area':temp[6][1].text.replace(' ',''),
             'phone' : temp2[3].find_all('span')[0].find('span').text.replace(' ',''),
-            'email' : temp2[5].text.replace(' ',''),
+            'email' : temp2[6].find('a').text.replace(' ',''),
             'credit_code' : temp[0][1].text.replace(' ',''),
             'taxpayer_num' : temp[3][5].text.replace(' ',''),
             'registration_num' : temp[3][3].text.replace(' ',''),
@@ -44,8 +45,8 @@ class Qichacha_list(object):
             'enterprise_type' : temp[4][1].text.replace(' ',''),
             'industry' : temp[7][1].text.replace(' ',''),
             'en_name' : temp[7][3].text.split(',')[0].replace(' Co.',''),
-            'web'  : temp2[4].find_all('span')[1].find('span',class_='val').text.replace(' ',''),
-            'address' : temp2[7].text.replace(' ','').replace('附近企业',''),
+            'web'  : temp2[3].find_all('span')[6].text.replace(' ',''),
+            'address' : temp[8][1].find('a').text.replace(' ',''),
             'company_range' : temp[9][1].text.replace(' ','')
         }
         return json.dumps(data)
