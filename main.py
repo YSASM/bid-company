@@ -2,9 +2,11 @@
 # encoding:utf-8
 import json,logging
 from logging import handlers
+from time import time
 from flask import Flask, render_template, request, jsonify
 from service import service
 from config import Config
+
 class Main(object):
     def __init__(self):
         print(Config.get())
@@ -29,6 +31,8 @@ class Main(object):
 
         console_handler.setFormatter(logging.Formatter(fmt))
         logger.addHandler(console_handler)
+
+
     s = service.Service()
     api = Flask(__name__) 
     @api.route('/',methods=['get']) 

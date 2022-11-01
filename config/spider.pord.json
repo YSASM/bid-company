@@ -1,0 +1,5 @@
+{
+  "db": "mysql+mysqlconnector://bid:kZXfNiS54bH7Y4NB@192.168.13.200:3306/bid",
+  "admin": "jiangyong,jianghuanhuan,dingpengcheng,wujiefeng",
+  "sender": "1000011"
+}

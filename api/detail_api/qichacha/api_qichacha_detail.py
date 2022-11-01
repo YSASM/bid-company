@@ -4,13 +4,15 @@ import re
 import time
 import requests
 from api.detail_api.qichacha.tools import tool
-
+from base.http_wrapper import HttpWrapper
 
 # 输入关键词，获取下拉菜单
 QCCSESSID = "1b2a5699837aab626f5804fc42"
 class Qichacha_Detail(object):
     def __init__(self) -> None:
-        self.tid = self.get_tid()
+        code,self.tid = self.get_tid()
+        if code==0:
+            return json.dumps({'num':0,'list':self.tid})
     def get_tid(self):
         
         headers = {
@@ -21,9 +23,14 @@ class Qichacha_Detail(object):
         params = (
             ('key', '\u4E07\u8FBE\u96C6\u56E2'),
         )
-        response = requests.get('https://www.qcc.com/web/search', headers=headers, params=params, verify=False)
-        result = re.search("window.tid='(.{32})'<", response.text, re.S).group(1)
-        return result
+        code,response = HttpWrapper.get('https://www.qcc.com/web/search', headers=headers, params=params)
+        if code!='ok':
+            return 0,'网络错误'
+        try:
+            result = re.search("window.tid='(.{32})'<", response.text, re.S).group(1)
+        except:
+            return 0,'返回错误'
+        return 1,result
     def run(self,input_key,times=3):
         tid = self.tid
         # tid = '2014a293fa94a9abcee7ce755c00134c'
@@ -43,13 +50,17 @@ class Qichacha_Detail(object):
             ('searchKey', f'{input_key}'),
             ('suggest', 'true'),
         )
-        response = requests.get('https://www.qcc.com/api/search/searchMind', headers=headers, params=params)
+        code,response = HttpWrapper.get('https://www.qcc.com/api/search/searchMind', headers=headers, params=params)
+        if code!='ok':
+            return json.dumps({'num':0,'list':'网络错误'})
         try:
             response = json.loads(response.text)
         except:
             if times == 0:
-                return json.dumps(response = {'num':0,'list':'Api失效'})
+                return json.dumps({'num':0,'list':'Api失效'})
             self.tid = self.get_tid()
+            if code==0:
+                return json.dumps({'num':0,'list':self.tid})
             self.run(input_key,times=times-1)
         try:
             response = response['list']
