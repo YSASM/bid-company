@@ -27,27 +27,87 @@ class Qichacha_list(object):
             td = tr.find_all('td')
             temp.append(td)
         temp2 = html.find('div',class_='contact-info').find_all('div')
+        try :
+            name = temp[0][3].text.replace(' ','')
+        except:pass
+        try :
+            registration_status = temp[1][3].text
+        except:pass
+        try :
+            corporate_representative = temp[1][1].find('span',class_='cont').find('span').find('a').text
+        except:pass
+        try :    
+            registered_capital = temp[2][1].text.replace(' ','')
+        except:pass
+        try :
+            incorporation_date = temp[1][5].text.replace(' ','')
+        except:pass
+        try :    
+            approval_date = temp[5][5].text.replace(' ','')
+        except:pass
+        try :    
+            area = temp[6][1].text.replace(' ','')
+        except:pass
+        try :    
+            phone = temp2[3].find_all('span')[0].find('span').text.replace(' ','')
+        except:pass
+        try :    
+            email = temp2[6].find('a').text.replace(' ','')
+        except:pass
+        try :    
+            credit_code = temp[0][1].text.replace(' ','')
+        except:pass
+        try :    
+            taxpayer_num = temp[3][5].text.replace(' ','')
+        except:pass
+        try :    
+            registration_num = temp[3][3].text.replace(' ','')
+        except:pass
+        try :    
+            organization_code = temp[3][1].text.replace(' ','')
+        except:pass
+        try :    
+            insured_persons = int(temp[5][3].find('span').text.replace(' ',''))
+        except:pass
+        try :    
+            enterprise_type = temp[4][1].text.replace(' ','')
+        except:pass    
+        try :    
+            industry = temp[7][1].text.replace(' ','')
+        except:pass
+        try :
+            en_name = temp[7][3].text.split(',')[0].replace(' Co.','')
+        except:pass
+        try :
+            web = temp2[3].find_all('span')[6].text.replace(' ','')
+        except:pass
+        try :
+            address = temp[8][1].find('a').text.replace(' ','')
+        except:pass
+        try :
+            company_range = temp[9][1].text.replace(' ','')
+        except:pass
         data = {
-            'name' : temp[0][3].text.replace(' ',''),
-            'registration_status' : temp[1][3].text,
-            'corporate_representative' : temp[1][1].find('span',class_='cont').find('span').find('a').text,
-            'registered_capital' : temp[2][1].text.replace(' ',''),
-            'incorporation_date' : temp[1][5].text.replace(' ',''),
-            'approval_date' : temp[5][5].text.replace(' ',''),
-            'area':temp[6][1].text.replace(' ',''),
-            'phone' : temp2[3].find_all('span')[0].find('span').text.replace(' ',''),
-            'email' : temp2[6].find('a').text.replace(' ',''),
-            'credit_code' : temp[0][1].text.replace(' ',''),
-            'taxpayer_num' : temp[3][5].text.replace(' ',''),
-            'registration_num' : temp[3][3].text.replace(' ',''),
-            'organization_code' : temp[3][1].text.replace(' ',''),
-            'insured_persons' : int(temp[5][3].find('span').text.replace(' ','')),
-            'enterprise_type' : temp[4][1].text.replace(' ',''),
-            'industry' : temp[7][1].text.replace(' ',''),
-            'en_name' : temp[7][3].text.split(',')[0].replace(' Co.',''),
-            'web'  : temp2[3].find_all('span')[6].text.replace(' ',''),
-            'address' : temp[8][1].find('a').text.replace(' ',''),
-            'company_range' : temp[9][1].text.replace(' ','')
+            'name' : name,
+            'registration_status' : registration_status,
+            'corporate_representative' : corporate_representative,
+            'registered_capital' : registered_capital,
+            'incorporation_date' : incorporation_date,
+            'approval_date' : approval_date,
+            'area': area,
+            'phone' : phone,
+            'email' : email,
+            'credit_code' : credit_code,
+            'taxpayer_num' : taxpayer_num,
+            'registration_num' : registration_num,
+            'organization_code' : organization_code,
+            'insured_persons' : insured_persons,
+            'enterprise_type' : enterprise_type,
+            'industry' : industry,
+            'en_name' : en_name,
+            'web'  : web,
+            'address' : address,
+            'company_range' : company_range
         }
         return json.dumps(data)
         
