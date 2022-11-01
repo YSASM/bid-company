@@ -1,3 +1,4 @@
+import json
 import re
 import time
 import requests
@@ -40,4 +41,10 @@ class Qichacha_Detail(object):
             ('suggest', 'true'),
         )
         response = requests.get('https://www.qcc.com/api/search/searchMind', headers=headers, params=params)
-        return response.text
+        response = json.loads(response.text)
+        try:
+            response = response['list']
+            response = {'num':len(response),'list':response}
+        except:
+            response = {'num':0,'list':None}
+        return json.dumps(response)

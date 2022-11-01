@@ -29,64 +29,64 @@ class Qichacha_list(object):
         temp2 = html.find('div',class_='contact-info').find_all('div')
         try :
             name = temp[0][3].text.replace(' ','')
-        except:pass
+        except:name = ''
         try :
             registration_status = temp[1][3].text
-        except:pass
+        except:registration_status = ''
         try :
             corporate_representative = temp[1][1].find('span',class_='cont').find('span').find('a').text
-        except:pass
+        except:corporate_representative = ''
         try :    
             registered_capital = temp[2][1].text.replace(' ','')
-        except:pass
+        except:registered_capital = ''
         try :
             incorporation_date = temp[1][5].text.replace(' ','')
-        except:pass
+        except:incorporation_date = ''
         try :    
             approval_date = temp[5][5].text.replace(' ','')
-        except:pass
+        except:approval_date = ''
         try :    
             area = temp[6][1].text.replace(' ','')
-        except:pass
+        except:area = ''
         try :    
             phone = temp2[3].find_all('span')[0].find('span').text.replace(' ','')
-        except:pass
+        except: phone = ''
         try :    
             email = temp2[6].find('a').text.replace(' ','')
-        except:pass
+        except:email = ''
         try :    
             credit_code = temp[0][1].text.replace(' ','')
-        except:pass
+        except:credit_code = ''
         try :    
             taxpayer_num = temp[3][5].text.replace(' ','')
         except:pass
         try :    
             registration_num = temp[3][3].text.replace(' ','')
-        except:pass
+        except:registration_num = ''
         try :    
             organization_code = temp[3][1].text.replace(' ','')
-        except:pass
+        except:organization_code = ''
         try :    
             insured_persons = int(temp[5][3].find('span').text.replace(' ',''))
-        except:pass
+        except:insured_persons = 0
         try :    
             enterprise_type = temp[4][1].text.replace(' ','')
-        except:pass    
+        except:enterprise_type = ''
         try :    
             industry = temp[7][1].text.replace(' ','')
-        except:pass
+        except:industry = ''
         try :
             en_name = temp[7][3].text.split(',')[0].replace(' Co.','')
-        except:pass
+        except:en_name = ''
         try :
             web = temp2[3].find_all('span')[6].text.replace(' ','')
-        except:pass
+        except:web = ''
         try :
             address = temp[8][1].find('a').text.replace(' ','')
-        except:pass
+        except:address = ''
         try :
             company_range = temp[9][1].text.replace(' ','')
-        except:pass
+        except:company_range = ''
         data = {
             'name' : name,
             'registration_status' : registration_status,
