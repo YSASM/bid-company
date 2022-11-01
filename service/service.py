@@ -64,6 +64,6 @@ class Service(object):
                     continue
                 if exp!="":
                     logging.error(exp)
-                return {'code':0,'msg':'操作成功。,id:%s,请求ip：%s'%('0#'+id,ip),'data':data}
+                return {'code':0,'msg':'操作成功,id:%s,请求ip：%s'%('0#'+id,ip),'data':data}
             logging.error(exp)
-            return {'code':1,'msg':'操作失败。,id:%s,请求ip：%s'%('1#'+id,ip),'data':exp}
+            return {'code':1,'msg':'操作失败,id:%s,请求ip：%s'%('1#'+id,ip),'data':exp}
