@@ -11,8 +11,6 @@ QCCSESSID = "1b2a5699837aab626f5804fc42"
 class Qichacha_Detail(object):
     def __init__(self) -> None:
         code,self.tid = self.get_tid()
-        if code==0:
-            return json.dumps({'num':0,'list':self.tid})
     def get_tid(self):
         
         headers = {
