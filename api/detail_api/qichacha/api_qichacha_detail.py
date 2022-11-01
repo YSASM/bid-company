@@ -1,3 +1,4 @@
+from cProfile import run
 import json
 import re
 import time
@@ -8,6 +9,8 @@ from api.detail_api.qichacha.tools import tool
 # 输入关键词，获取下拉菜单
 QCCSESSID = "7e65dea622d446795c386f8c0b"
 class Qichacha_Detail(object):
+    def __init__(self) -> None:
+        self.tid = self.get_tid()
     def get_tid(self):
         
         headers = {
@@ -21,8 +24,8 @@ class Qichacha_Detail(object):
         response = requests.get('https://www.qcc.com/web/search', headers=headers, params=params, verify=False)
         result = re.search("window.tid='(.{32})'<", response.text, re.S).group(1)
         return result
-    def run(self,input_key):
-        tid = self.get_tid()
+    def run(self,input_key,times=3):
+        tid = self.tid
         # tid = '2014a293fa94a9abcee7ce755c00134c'
         header_key = tool.get_key(input_key)
         header_value = tool.get_value(input_key,tid )
@@ -41,7 +44,13 @@ class Qichacha_Detail(object):
             ('suggest', 'true'),
         )
         response = requests.get('https://www.qcc.com/api/search/searchMind', headers=headers, params=params)
-        response = json.loads(response.text)
+        try:
+            response = json.loads(response.text)
+        except:
+            if times == 0:
+                return json.dumps(response = {'num':0,'list':'Api失效'})
+            self.tid = self.get_tid()
+            self.run(input_key,times=times-1)
         try:
             response = response['list']
             response = {'num':len(response),'list':response}
