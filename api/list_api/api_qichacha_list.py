@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 class Qichacha_list(object):
     def __init__(self):
-        QCCSESSID = "7e65dea622d446795c386f8c0b"
+        QCCSESSID = "1b2a5699837aab626f5804fc42"
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
             'cookie': f'QCCSESSID={QCCSESSID};',
