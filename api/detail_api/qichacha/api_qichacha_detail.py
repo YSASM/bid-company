@@ -7,7 +7,7 @@ from api.detail_api.qichacha.tools import tool
 
 
 # 输入关键词，获取下拉菜单
-QCCSESSID = "7e65dea622d446795c386f8c0b"
+QCCSESSID = "1b2a5699837aab626f5804fc42"
 class Qichacha_Detail(object):
     def __init__(self) -> None:
         self.tid = self.get_tid()
