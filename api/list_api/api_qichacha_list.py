@@ -1,10 +1,11 @@
 import json
+import traceback
 import requests
 from bs4 import BeautifulSoup
 
-class ApiError(BaseException):
-    def __init__(self, message):
-        self.message = message
+# class ApiError(BaseException):
+#     def __init__(self, message):
+#         self.message = message
 
 class Qichacha_list(object):
     def __init__(self):
@@ -21,7 +22,14 @@ class Qichacha_list(object):
         try:
             trs = html.find('div',class_='cominfo-normal').find_all('tr')
         except:
-            raise ApiError('ApiError')
+            if '公司不存在' in response.text:
+                return {'status':1,'name':'公司不存在'}
+            elif'会员登陆' in response.text:
+                return {'status':1,'name':'需要登陆'}
+            elif'验证码' in response.text:
+                return {'status':1,'name':'需要验证码'}
+            else:
+                return {'status':1,'name':'未知错误:'+traceback.format_exc()}
         temp = []
         for tr in trs:
             td = tr.find_all('td')
@@ -88,6 +96,7 @@ class Qichacha_list(object):
             company_range = temp[9][1].text.replace(' ','')
         except:company_range = ''
         data = {
+            'status' : 0,
             'name' : name,
             'registration_status' : registration_status,
             'corporate_representative' : corporate_representative,
