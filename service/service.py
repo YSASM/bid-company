@@ -23,11 +23,13 @@ class Service(object):
         message.append("时间：%s" % time.strftime("%Y-%m-%d %H:%M:%S"))
         message.append(exp)
         MessageService.send_text("\n".join(message), receiver)
-    def add_log(self,request_time,ren,api_name,type):
+    def add_log(self,request_time,ren,api_name,type,words):
         cy_log = CompanyLog()
         cy_log.code = ren['code']
         cy_log.ip = ren['ip']
-        cy_log.data = str(ren)
+        cy_log.data = str(ren['data'])
+        cy_log.msg = ren['msg']
+        cy_log.words = words
         cy_log.request_time = request_time
         cy_log.create_time = int(time.time())
         cy_log.api_name = api_name
@@ -45,7 +47,7 @@ class Service(object):
                     exp = traceback.format_exc()
                     ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
                     request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'detail')
+                    self.add_log(request_time,ren,str(i),'detail',words)
                     continue
                 try:
                     data = json.loads(data)
@@ -53,18 +55,18 @@ class Service(object):
                     exp = traceback.format_exc()
                     ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
                     request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'detail')
+                    self.add_log(request_time,ren,str(i),'detail',words)
                     continue
                 if data['num']==0:
                     ren = {'code':0,'ip':ip,'msg':'无数据。','data':data}
                 else:
                     ren = {'code':0,'ip':ip,'msg':'操作成功。','data':data}
                 request_time = int(float(time.time())*1000) - start
-                self.add_log(request_time,ren,str(i),'detail')
+                self.add_log(request_time,ren,str(i),'detail',words)
                 return ren
             ren = {'code':1,'ip':ip,'msg':'所有api操作失败。','data':exp}
             request_time = int(float(time.time())*1000) - start
-            self.add_log(request_time,ren,str(i),'detail')
+            self.add_log(request_time,ren,str(i),'detail',words)
             return ren
         elif method == 'list':
             start = int(float(time.time())*1000)
@@ -77,7 +79,7 @@ class Service(object):
                     exp = traceback.format_exc()
                     ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
                     request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'list')
+                    self.add_log(request_time,ren,str(i),'list',words)
                     continue
                 try:
                     data = json.loads(data)
@@ -85,16 +87,16 @@ class Service(object):
                     exp = traceback.format_exc()
                     ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
                     request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'list')
+                    self.add_log(request_time,ren,str(i),'list',words)
                     continue
                 if data['name'] in ['公司不存在','需要验证码','需要登陆'] or '未知错误' in data['name']:
                     ren = {'code':0,'ip':ip,'msg':'无数据。','data':data}
                 else:
                     ren = {'code':0,'ip':ip,'msg':'操作成功。','data':data}
                 request_time = int(float(time.time())*1000) - start
-                self.add_log(request_time,ren,str(i),'list')
+                self.add_log(request_time,ren,str(i),'list',words)
                 return ren
             ren = {'code':1,'ip':ip,'msg':'所有api操作失败。','data':exp}
             request_time = int(float(time.time())*1000) - start
-            self.add_log(request_time,ren,str(i),'list')
+            self.add_log(request_time,ren,str(i),'list',words)
             return ren

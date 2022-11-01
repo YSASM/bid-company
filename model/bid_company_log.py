@@ -7,6 +7,8 @@ from . import Base
 class CompanyLog(Base):
     __tablename__ = "bid_company_log"  # 数据表的名字
     id = Column(Integer, primary_key=True)
+    words = Column(String(255))
+    msg = Column(String(255))
     ip = Column(String(255))
     code = Column(Integer)
     data = Column(Text)
@@ -17,6 +19,8 @@ class CompanyLog(Base):
     
     def __init__(self):
         self.id = 0
+        self.words = ''
+        self.msg = ''
         self.ip = ''
         self.code = 0
         self.data = ''
