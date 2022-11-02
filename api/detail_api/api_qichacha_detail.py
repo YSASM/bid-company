@@ -1,9 +1,6 @@
-from cProfile import run
 import json
 import re
-import time
-import requests
-from api.detail_api.qichacha.tools import tool
+from base.tools import tool
 from base.http_wrapper import HttpWrapper
 
 # 输入关键词，获取下拉菜单
@@ -64,5 +61,5 @@ class Qichacha_Detail(object):
             response = response['list']
             response = {'num':len(response),'list':response}
         except:
-            response = {'num':0,'list':None}
+            response = {'num':0,'list':'无数据'}
         return json.dumps(response)

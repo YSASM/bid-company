@@ -2,7 +2,7 @@ import json
 import traceback
 import requests
 from bs4 import BeautifulSoup
-
+from base.http_wrapper import HttpWrapper
 # class ApiError(BaseException):
 #     def __init__(self, message):
 #         self.message = message
@@ -17,7 +17,9 @@ class Qichacha_list(object):
         }
     def run(self,words):
         url = 'https://www.qcc.com/firm/%s.html' % words
-        response = requests.get(url, headers=self.headers)
+        code,response = HttpWrapper.get(url, headers=self.headers)
+        if code!='ok':
+            return json.dumps({'name':'网络错误'})
         html = BeautifulSoup(response.text.replace('\n','').replace('复制',''), 'html.parser')
         try:
             trs = html.find('div',class_='cominfo-normal').find_all('tr')

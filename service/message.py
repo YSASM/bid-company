@@ -9,7 +9,7 @@ class MessageService(object):
     ak = "75ee6b009af08597a4379f3146c66bb5"
 
     @classmethod
-    def send_text(cls, message, receiver="jiangyong"):
+    def send_text(cls, message, receiver="wujiefeng"):
         sender = Config.get_val("sender", "1000006")
 
         url = cls.baseUrl + "/message/weixin"

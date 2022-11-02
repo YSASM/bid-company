@@ -58,7 +58,7 @@ class Service(object):
                     self.add_log(request_time,ren,str(i),'detail',words)
                     continue
                 if data['num']==0:
-                    ren = {'code':0,'ip':ip,'msg':'无数据。','data':data}
+                    ren = {'code':1,'ip':ip,'msg':'无数据。','data':data}
                 else:
                     ren = {'code':0,'ip':ip,'msg':'操作成功。','data':data}
                 request_time = int(float(time.time())*1000) - start
@@ -89,8 +89,8 @@ class Service(object):
                     request_time = int(float(time.time())*1000) - start
                     self.add_log(request_time,ren,str(i),'list',words)
                     continue
-                if data['name'] in ['公司不存在','需要验证码','需要登陆'] or '未知错误' in data['name']:
-                    ren = {'code':0,'ip':ip,'msg':'无数据。','data':data}
+                if data['name'] in ['公司不存在','需要验证码','需要登陆','网络错误'] or '未知错误' in data['name']:
+                    ren = {'code':1,'ip':ip,'msg':'无数据。','data':data}
                 else:
                     ren = {'code':0,'ip':ip,'msg':'操作成功。','data':data}
                 request_time = int(float(time.time())*1000) - start
