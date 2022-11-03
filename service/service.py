@@ -1,8 +1,5 @@
 import base64
-import json
-import logging
-import os
-import threading
+from service.message import MessageService
 import time
 import traceback
 from config.config import Config
@@ -26,6 +23,8 @@ class Service(object):
         MessageService.send_text("\n".join(message), receiver)
     def add_log(self,request_time,ren,method):
         cy_log = CompanyLog()
+        if ren['error'] !="":
+            MessageService.send_text(ren['error'])
         cy_log.code = ren['code']
         cy_log.ip = ren['ip']
         cy_log.data = str(ren['data'])
@@ -82,6 +81,11 @@ class Service(object):
             return ren
         if not words:
             list.error = 'words参数错误'
+            ren = list.bejson(list)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
+        if not words and not type:
+            list.error = '需要参数：words,type'
             ren = list.bejson(list)
             self.add_log(self.request_time(start),ren,method)
             return ren

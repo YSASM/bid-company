@@ -17,8 +17,10 @@ class KanzhunwangList(object):
             ('kiv', iv),
         )
         code,response = HttpWrapper.get('https://www.kanzhun.com/api_to/cbi/base_info.json', headers=headers, params=params)
+        if code != 'ok':
+            return 0,'网络错误'
         result = get_decrypt_data(response.text, iv)
-        return result
+        return 1,result
     def html(self,key_no):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0',
@@ -31,12 +33,20 @@ class KanzhunwangList(object):
             'Sec-Fetch-Site': 'same-origin',
         }
         code,response = HttpWrapper.get('https://www.kanzhun.com/firm/industry/%s.html' % key_no, headers=headers)
+        if code != 'ok':
+            return 0,'网络错误'
         html = BeautifulSoup(response.text, 'html.parser')
-        return html
+        return 1,html
         
     def run(self,words,list):
-        res = self.info(words)
-        html = self.html(words)
+        code,res = self.info(words)
+        if code == 0:
+            list.error = res
+            return list
+        code,html = self.html(words)
+        if code == 0:
+            list.error = res
+            return list
         try:
             res = json.loads(res)
             res = res['resdata']
