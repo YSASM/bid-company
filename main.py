@@ -3,9 +3,11 @@
 import json,logging
 from logging import handlers
 from time import time
+import traceback
 from flask import Flask, render_template, request, jsonify
 from service import service
 from config import Config
+from api.mode import Detail
 
 class Main(object):
     def __init__(self):
@@ -43,8 +45,9 @@ class Main(object):
     @api.route('/list',methods=['get'])
     def list():
         words = request.args.get('words')
+        type = request.args.get('type')
         ip = request.remote_addr
-        ren = Main.s.get('list',words,ip)
+        ren = Main.s.get('list',words,ip,type=type)
         return jsonify(ren)
 
     @api.route('/details',methods=['get'])

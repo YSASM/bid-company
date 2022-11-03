@@ -1,0 +1,26 @@
+import json
+import execjs
+
+
+def get_encrypt_data(key_id, iv):
+    """
+    获取加密数据
+    :return:
+    """
+    f = open('base/js/kanzhunwang.js', 'r', encoding='utf-8')
+    context = execjs.compile(f.read())
+    f.close()
+    result = context.call('encrypt', json.dumps({"encCompanyId": key_id}), iv)
+    return result
+
+
+def get_decrypt_data(data, iv):
+    """
+    获取解密数据
+    :return:
+    """
+    f = open('base/js/kanzhunwang.js', 'r', encoding='utf-8')
+    context = execjs.compile(f.read())
+    f.close()
+    result = context.call('decrypt', data, iv)
+    return result

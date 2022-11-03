@@ -8,6 +8,7 @@ import traceback
 from config.config import Config
 from service.message import MessageService
 from api import detail_api,list_api
+from api.mode import Detail,List
 from model.bid_company_log import CompanyLog,CompanyLogDao
 
 class Service(object):
@@ -23,80 +24,84 @@ class Service(object):
         message.append("时间：%s" % time.strftime("%Y-%m-%d %H:%M:%S"))
         message.append(exp)
         MessageService.send_text("\n".join(message), receiver)
-    def add_log(self,request_time,ren,api_name,type,words):
+    def add_log(self,request_time,ren,method):
         cy_log = CompanyLog()
         cy_log.code = ren['code']
         cy_log.ip = ren['ip']
         cy_log.data = str(ren['data'])
         cy_log.msg = ren['msg']
-        cy_log.words = words
+        cy_log.words = ren['words']
         cy_log.request_time = request_time
         cy_log.create_time = int(time.time())
-        cy_log.api_name = api_name
-        cy_log.type = type
+        cy_log.api_name = ren['data']['type']
+        cy_log.type = method
         self.add(cy_log)
-    def get(self,method,words,ip):
+    def request_time(self,start):
+        return int(float(time.time())*1000) - start
+    def get_list_object(self,type):
+        for i in self.list:
+            if i[0] == type:
+                return i
+        return None
+    #下拉列表查询
+    def get_detail(self,method,start,words,ip):
         exp = ''
+        detail = Detail()
+        detail.ip = ip
+        if not words:
+            detail.error = "words参数错误"
+            ren = detail.bejson(detail)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
+        detail.words = words
+        for i in range(0,len(self.detail)):
+            detail.type = self.detail[i][0]
+            self.d = self.detail[i][1]()
+            try:
+                detail = self.d.run(words,detail)
+            except:
+                exp = traceback.format_exc()
+                detail.error = exp
+                ren = detail.bejson(detail)
+                self.add_log(self.request_time(start),ren,method)
+                continue
+            ren = detail.bejson(detail)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
+        return ren
+    #详情页查询
+    def get_list(self,method,start,words,ip,type):
+        list = List()
+        list.ip = ip
+        #根据type调用相应api
+        self.o = self.get_list_object(type)
+        if not self.o:
+            list.error = 'type参数错误'
+            ren = list.bejson(list)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
+        if not words:
+            list.error = 'words参数错误'
+            ren = list.bejson(list)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
+        list.words = words
+        list.type = self.o[0]
+        self.l = self.o[1]()
+        try:
+            list = self.l.run(words,list)
+        except:
+            exp = traceback.format_exc()
+            list.error = exp
+            ren = list.bejson(list)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
+        ren = list.bejson(list)
+        self.add_log(self.request_time(start),ren,method)
+        return ren
+    def get(self,method,words,ip,type=''):
+        start = int(float(time.time())*1000)
         if method == 'detail':
-            start = int(float(time.time())*1000)
-            for i in self.detail:
-                try:
-                    self.d = i()
-                    data = self.d.run(words)
-                except:
-                    exp = traceback.format_exc()
-                    ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
-                    request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'detail',words)
-                    continue
-                try:
-                    data = json.loads(data)
-                except:
-                    exp = traceback.format_exc()
-                    ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
-                    request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'detail',words)
-                    continue
-                if data['num']==0:
-                    ren = {'code':1,'ip':ip,'msg':'无数据。','data':data}
-                else:
-                    ren = {'code':0,'ip':ip,'msg':'操作成功。','data':data}
-                request_time = int(float(time.time())*1000) - start
-                self.add_log(request_time,ren,str(i),'detail',words)
-                return ren
-            ren = {'code':1,'ip':ip,'msg':'所有api操作失败。','data':exp}
-            request_time = int(float(time.time())*1000) - start
-            self.add_log(request_time,ren,str(i),'detail',words)
-            return ren
+            return self.get_detail(method,start,words,ip)
         elif method == 'list':
-            start = int(float(time.time())*1000)
-            id = str(int(time.time()))+'#'+ip.replace('.','')
-            for i in self.list:
-                try:
-                    self.d = i()
-                    data = self.d.run(words)
-                except:
-                    exp = traceback.format_exc()
-                    ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
-                    request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'list',words)
-                    continue
-                try:
-                    data = json.loads(data)
-                except:
-                    exp = traceback.format_exc()
-                    ren = {'code':1,'ip':ip,'msg':'操作失败。','data':exp}
-                    request_time = int(float(time.time())*1000) - start
-                    self.add_log(request_time,ren,str(i),'list',words)
-                    continue
-                if data['name'] in ['公司不存在','需要验证码','需要登陆','网络错误'] or '未知错误' in data['name']:
-                    ren = {'code':1,'ip':ip,'msg':'无数据。','data':data}
-                else:
-                    ren = {'code':0,'ip':ip,'msg':'操作成功。','data':data}
-                request_time = int(float(time.time())*1000) - start
-                self.add_log(request_time,ren,str(i),'list',words)
-                return ren
-            ren = {'code':1,'ip':ip,'msg':'所有api操作失败。','data':exp}
-            request_time = int(float(time.time())*1000) - start
-            self.add_log(request_time,ren,str(i),'list',words)
-            return ren
+            return self.get_list(method,start,words,ip,type)
