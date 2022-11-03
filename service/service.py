@@ -15,7 +15,7 @@ class Service(object):
         cld = CompanyLogDao()
         self.add = cld.add
 
-    def send_alarm(self, title, exp, receiver=None):
+    def send_alarm(self, title, exp, receiver="wujiefeng"):
         message = []
         message.append("【%s】【%s】" % (title, Config.env()))
         message.append("时间：%s" % time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -24,7 +24,7 @@ class Service(object):
     def add_log(self,request_time,ren,method):
         cy_log = CompanyLog()
         if ren['error'] !="":
-            MessageService.send_text(ren['error'])
+            self.send_alarm("API ERROR",ren['error'])
         cy_log.code = ren['code']
         cy_log.ip = ren['ip']
         cy_log.data = str(ren['data'])
@@ -54,6 +54,7 @@ class Service(object):
             return ren
         detail.words = words
         for i in range(0,len(self.detail)):
+            detail.error = ""
             detail.type = self.detail[i][0]
             self.d = self.detail[i][1]()
             try:
