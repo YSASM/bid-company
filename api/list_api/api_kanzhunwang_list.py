@@ -18,7 +18,7 @@ class KanzhunwangList(object):
         )
         code,response = HttpWrapper.get('https://www.kanzhun.com/api_to/cbi/base_info.json', headers=headers, params=params)
         if code != 'ok':
-            return 0,'网络错误'
+            return 0,'无公司信息或网络错误'
         result = get_decrypt_data(response.text, iv)
         return 1,result
     def html(self,key_no):
