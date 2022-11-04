@@ -38,8 +38,11 @@ class Main(object):
     s = service.Service()
     api = Flask(__name__) 
     @api.route('/',methods=['get']) 
-    def index():
-        return render_template('index.html')
+    def help():
+        return render_template('help.html')
+    @api.route('/manage',methods=['get']) 
+    def manage():
+        return render_template('manage.html')
     @api.route('/list',methods=['get'])
     def list():
         start = int(float(time())*1000)
@@ -55,7 +58,6 @@ class Main(object):
             ren = list.bejson(list)
             Main.s.add_log(Main.s.request_time(start),ren,'list')
         return jsonify(ren)
-
     @api.route('/details',methods=['get'])
     def details():
         start = int(float(time())*1000)
@@ -70,7 +72,18 @@ class Main(object):
             ren = detail.bejson(detail)
             Main.s.add_log(Main.s.request_time(start),ren,'detail')
         return jsonify(ren)
-    
+    @api.route('/log',methods=['get'])
+    def log():
+        method = request.args.get('method')#id,time,words
+        if method == 'id':
+            ren = Main.s.get_log_byId(request.args.get('id'))
+        elif method == 'words':
+            ren = Main.s.get_log_byWords(request.args.get('words'))
+        elif method == 'time':
+            ren = Main.s.get_log_byTime(request.args.get('start'),request.args.get('end'))
+        elif method == 'all':
+            ren = Main.s.get_logs()
+        return jsonify(ren)
 if __name__ == '__main__':
     main = Main()
 

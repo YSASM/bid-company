@@ -7,7 +7,7 @@ import traceback
 from config.config import Config
 from service.message import MessageService
 from api import detail_api,list_api
-from api.mode import Detail,List
+from api.mode import Detail,List,Log
 from model.bid_company_log import CompanyLog,CompanyLogDao
 
 class Service(object):
@@ -16,8 +16,8 @@ class Service(object):
         self.list = list_api.get_list()
         self.cs = CompanyService()
         self.cd = CompanyDao()
-        cld = CompanyLogDao()
-        self.add = cld.add
+        self.cld = CompanyLogDao()
+        self.add = self.cld.add
 
     def send_alarm(self, title, exp, receiver="wujiefeng"):
         message = []
@@ -217,3 +217,30 @@ class Service(object):
             return self.get_detail(method,start,words,ip)
         elif method == 'list':
             return self.get_list(method,start,words,ip,type)
+    def get_log_byId(self,id):
+        try:
+            backlog = Log()
+            log = self.cld.get_by_id(id)
+            backlog.logs = [log]
+        except:
+            exp = traceback.format_exc()
+            backlog.error = exp
+        ren = backlog.bejson(backlog)
+        return ren
+    def get_log_byTime(self,start,end):
+        pass
+    def get_log_byWords(self,words):
+        pass
+    def get_logs(self):
+        backlog = Log()
+        try:
+            logs = self.cld.query_all()
+            back = []
+            for log in logs:
+                back.append(self.cld.bejson(log))
+            backlog.logs = back
+        except:
+            exp = traceback.format_exc()
+            backlog.error = exp
+        ren = backlog.bejson(backlog)
+        return ren

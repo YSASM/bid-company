@@ -1,3 +1,4 @@
+import json
 from sqlalchemy import Column
 from sqlalchemy.types import *  # 所有字段类型
 from . import DBSession
@@ -41,3 +42,33 @@ class CompanyLogDao(object):
         sesion.add(company_log)
         sesion.commit()
         sesion.close()
+    @classmethod
+    def query_all(cls):
+        session = DBSession()
+        o = session.query(CompanyLog).all()
+        session.close()
+        return o
+    def bejson(self,companylog):
+        try:
+            data = json.loads(companylog.data.replace("\'","\""))
+        except:
+            data = companylog.data
+        return{
+            "id":companylog.id,
+            "words":companylog.words,
+            "msg":companylog.msg,
+            "ip":companylog.ip,
+            "code":companylog.code,
+            "data":data,
+            "create_time":companylog.create_time,
+            "request_time":companylog.request_time,
+            "api_name":companylog.api_name,
+            "type":companylog.type,
+            "error":companylog.error
+        }
+    @classmethod
+    def get_by_id(cls, id):
+        session = DBSession()
+        ret = session.query(CompanyLog).filter_by(id=id).first()
+        session.close()
+        return ret
