@@ -16,6 +16,7 @@ class CompanyLog(Base):
     request_time  = Column(Integer)
     api_name = Column(String(255))
     type = Column(String(255))
+    error = Column(String(255))
     
     def __init__(self):
         self.id = 0

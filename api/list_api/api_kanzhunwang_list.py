@@ -54,7 +54,7 @@ class KanzhunwangList(object):
             pass
         data = ListData()
         try:
-            data.name = html.find('h1',class_='base-title').get('title')
+            data.name = html.find('h1',class_='base-title').text
         except:
             list.error = '获取公司名失败'
         try:
@@ -91,7 +91,7 @@ class KanzhunwangList(object):
         data.taxpayer_num = res['registerVO']['taxpayerIdentity']
         data.registration_num = res['registerVO']['registerNumber']
         data.organization_code = res['registerVO']['organizationCode']
-        data.insured_persons = res['registerVO']['insuredCount']
+        data.insured_persons = int(res['registerVO']['insuredCount'])
         data.enterprise_type = res['registerVO']['companyType']
         data.industry = res['registerVO']['industry']
         data.address = res['registerVO']['registerAddress']
