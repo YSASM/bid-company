@@ -155,6 +155,7 @@ class Service(object):
             self.add_log(self.request_time(start),ren,method)
             return ren
         detail.error = "无结果"
+        ren = detail.bejson(detail)
         return ren
     #详情页查询
     def get_list(self,method,start,words,ip,type):
