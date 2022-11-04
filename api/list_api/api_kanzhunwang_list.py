@@ -54,7 +54,11 @@ class KanzhunwangList(object):
             pass
         data = ListData()
         try:
-            data.name = html.find('h1',class_='base-title').text
+            if html.find('div',class_='business-container').find('div',class_='item-title').text == '公司全称':
+                print("123")
+                data.name = html.find('div',class_='business-container').find('div',class_='item-content').text
+            else:
+                data.name = html.find('h1',class_='base-title').text
         except:
             list.error = '获取公司名失败'
         try:
