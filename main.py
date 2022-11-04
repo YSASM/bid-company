@@ -7,7 +7,7 @@ import traceback
 from flask import Flask, render_template, request, jsonify
 from service import service
 from config import Config
-from api.mode import Detail
+from api.mode import Detail,List
 
 class Main(object):
     def __init__(self):
@@ -44,17 +44,33 @@ class Main(object):
         return json.dumps(ren,ensure_ascii=False)
     @api.route('/list',methods=['get'])
     def list():
-        words = request.args.get('words')
-        type = request.args.get('type')
-        ip = request.remote_addr
-        ren = Main.s.get('list',words,ip,type=type)
+        start = int(float(time())*1000)
+        try:
+            words = request.args.get('words')
+            type = request.args.get('type')
+            ip = request.remote_addr
+            ren = Main.s.get('list',words,ip,start,type=type)
+        except:
+            list = List()
+            exp = traceback.format_exc()
+            list.error = exp
+            ren = list.bejson(list)
+            Main.s.add_log(Main.s.request_time(start),ren,'list')
         return jsonify(ren)
 
     @api.route('/details',methods=['get'])
     def details():
-        words = request.args.get('words')
-        ip = request.remote_addr
-        ren = Main.s.get('detail',words,ip)
+        start = int(float(time())*1000)
+        try:
+            words = request.args.get('words')
+            ip = request.remote_addr
+            ren = Main.s.get('detail',words,ip,start)
+        except:
+            detail = Detail()
+            exp = traceback.format_exc()
+            detail.error = exp
+            ren = detail.bejson(detail)
+            Main.s.add_log(Main.s.request_time(start),ren,'detail')
         return jsonify(ren)
     
 if __name__ == '__main__':

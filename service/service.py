@@ -150,7 +150,14 @@ class Service(object):
             if detail.num == 0:
                 continue
             if detail.type!="yuanlue":
-                self.add_company_detail(detail)
+                try:
+                    self.add_company_detail(detail)
+                except:
+                    exp = traceback.format_exc()
+                    detail.error = exp
+                    ren = detail.bejson(detail)
+                    self.add_log(self.request_time(start),ren,method)
+                    return ren
             ren = detail.bejson(detail)
             self.add_log(self.request_time(start),ren,method)
             return ren
@@ -190,15 +197,21 @@ class Service(object):
             self.add_log(self.request_time(start),ren,method)
             return ren
         if list.type!="yuanlue":
-            if not self.exist_list(list):
-                self.add_company_list(list)
-            else:
-                self.update_company_list(list)
+            try:
+                if not self.exist_list(list):
+                    self.add_company_list(list)
+                else:
+                    self.update_company_list(list)
+            except:
+                exp = traceback.format_exc()
+                list.error = exp
+                ren = list.bejson(list)
+                self.add_log(self.request_time(start),ren,method)
+                return ren
         ren = list.bejson(list)
         self.add_log(self.request_time(start),ren,method)
         return ren
-    def get(self,method,words,ip,type=''):
-        start = int(float(time.time())*1000)
+    def get(self,method,words,ip,start,type=''):
         if method == 'detail':
             return self.get_detail(method,start,words,ip)
         elif method == 'list':
