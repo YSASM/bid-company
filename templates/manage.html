@@ -95,7 +95,7 @@
 </div>
 <script>
   layui.use(['form','laydate','dropdown','table'], function(){
-    var url = 'http://127.0.0.1:9252/log?method=all'
+    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=all'
     var method = 'id'
     var table = layui.table;
     //第一个实例
@@ -119,7 +119,7 @@
         ,{field: 'error', title: '错误信息', width: 100}
       ]]
     });
-    url = 'http://127.0.0.1:9252/log?method=id'
+    url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=id'
     var  form = layui.form ;
             $ = layui.jquery ;
              laydate = layui.laydate;
@@ -150,7 +150,7 @@
       ,click: function(data, othis){
         var elem = $(this.elem)
         ,listId = elem.data('id'); //表格列表的预埋数据
-        url = 'http://127.0.0.1:9252/log?method='+ data.method
+        url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method='+ data.method
         method = data.method
         if(data.method=='id'){
           $("#idinput1").show();
