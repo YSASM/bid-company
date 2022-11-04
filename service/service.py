@@ -63,6 +63,7 @@ class Service(object):
             company = Company()
             company.logo = item['logo']
             company.name = item['name']
+            company.create_time=int(time.time())
             company.name_md5 = get_md5(item['name'])
             self.cd.add(company)
     def update_company_detail(self,item):
