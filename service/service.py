@@ -221,7 +221,7 @@ class Service(object):
         try:
             backlog = Log()
             log = self.cld.get_by_id(id)
-            backlog.logs = [log]
+            backlog.logs = [self.cld.bejson(log)]
         except:
             exp = traceback.format_exc()
             backlog.error = exp

@@ -115,8 +115,8 @@
         ,{field: 'msg', title: '状态信息', width: 100}
         ,{field: 'request_time', title: '请求耗时', width: 100}
         ,{field: 'create_time', title: '日志时间', width: 100}
-        ,{field: 'data', title: '返回信息', width: 500}
-        ,{field: 'error', title: '错误信息', width: 300}
+        ,{field: 'data', title: '返回信息', width: 100}
+        ,{field: 'error', title: '错误信息', width: 100}
       ]]
     });
     url = 'http://127.0.0.1:9252/log?method=id'
@@ -190,7 +190,9 @@
           return
         }
         url = url+"&id=" + v;
-        table.reloadData('logstable', {})
+        table.reloadData('logstable', {
+          url:url
+        })
         url = old_url
       }
     // layer.msg("qwe");
