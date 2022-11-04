@@ -39,9 +39,7 @@ class Main(object):
     api = Flask(__name__) 
     @api.route('/',methods=['get']) 
     def index():
-        ren = {'msg':'成功访问首页','msg_code':200}
-        #json.dumps 序列化时对中文默认使用的ascii编码.想输出中文需要指定ensure_ascii=False
-        return json.dumps(ren,ensure_ascii=False)
+        return render_template('index.html')
     @api.route('/list',methods=['get'])
     def list():
         start = int(float(time())*1000)
