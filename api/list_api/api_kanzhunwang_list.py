@@ -85,20 +85,68 @@ class KanzhunwangList(object):
                 data.old_name = "-"
         except:
             pass
-        data.registration_status = res['registerVO']['manageStatus']
-        data.corporate_representative = res['registerVO']['legalPersonName']
-        data.registered_capital = res['registerVO']['registerMoney']
-        data.incorporation_date = res['registerVO']['createDate']
-        data.approval_date = res['registerVO']['checkDate']
-        data.area = res['registerVO']['area']
-        data.credit_code = res['registerVO']['socialCode']
-        data.taxpayer_num = res['registerVO']['taxpayerIdentity']
-        data.registration_num = res['registerVO']['registerNumber']
-        data.organization_code = res['registerVO']['organizationCode']
-        data.insured_persons = int(res['registerVO']['insuredCount'])
-        data.enterprise_type = res['registerVO']['companyType']
-        data.industry = res['registerVO']['industry']
-        data.address = res['registerVO']['registerAddress']
-        data.company_range = res['registerVO']['manageScope']
-        list.content = data.bejson(data)
+        try:
+            data.registration_status = res['registerVO']['manageStatus']
+        except:
+            pass
+        try:
+            data.corporate_representative = res['registerVO']['legalPersonName']
+        except:
+            pass
+        try:
+            data.registered_capital = res['registerVO']['registerMoney']
+        except:
+            pass
+        try:
+            data.incorporation_date = res['registerVO']['createDate']
+        except:
+            pass
+        try:
+            data.approval_date = res['registerVO']['checkDate']
+        except:
+            pass
+        try:
+            data.area = res['registerVO']['area']
+        except:
+            pass
+        try:
+            data.credit_code = res['registerVO']['socialCode']
+        except:
+            pass
+        try:
+            data.taxpayer_num = res['registerVO']['taxpayerIdentity']
+        except:
+            pass
+        try:
+            data.registration_num = res['registerVO']['registerNumber']
+        except:
+            pass
+        try:
+            data.organization_code = res['registerVO']['organizationCode']
+        except:
+            pass
+        try:
+            data.insured_persons = int(res['registerVO']['insuredCount'])
+        except:
+            pass
+        try:
+            data.enterprise_type = res['registerVO']['companyType']
+        except:
+            pass
+        try:
+            data.industry = res['registerVO']['industry']
+        except:
+            pass
+        try:
+            data.address = res['registerVO']['registerAddress']
+        except:
+            pass
+        try:
+            data.company_range = res['registerVO']['manageScope']
+        except:
+            pass
+        try:
+            list.content = data.bejson(data)
+        except:
+            pass
         return list
