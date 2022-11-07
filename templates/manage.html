@@ -93,6 +93,9 @@
     远略科技
   </div>
 </div>
+<style>
+  .layui-table-page{text-align: center;}
+</style>
 <script>
   layui.use(['form','laydate','dropdown','table','laypage','laydate','util'], function(){
     var data = new Date();
@@ -107,8 +110,8 @@
     $("#timeend").val(endstr);
     // timeStamp = timeStamp/1000
     // layer.msg(start);
-    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end);
-    // var url = '127.0.0.1:9252/log?method=time&start='+String(start)+'&end='+String(end)
+    // var url = '/log?method=time&start='+String(start)+'&end='+String(end);
+    var url = '/log?method=time&start='+String(start)+'&end='+String(end)
     var method = 'time';
     var laypage = layui.laypage //分页
 	  var	table = layui.table //表格
@@ -135,8 +138,7 @@
       ]]
       ,page: true
       ,limits: [3,5,10]
-      ,limit: 10
-      
+      ,limit: data.num,
       // ,parseData:function(res){
       //   //解析分页数据
       //   var result;
@@ -155,8 +157,8 @@
       // }
     });
     // url = '127.0.0.1:9252/log?method=time'
-    url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time'
-    url = 'http://127.0.0.1:9252/log?method=time'
+    url = '/log?method=time'
+    // url = 'http://127.0.0.1:9252/log?method=time'
     var  form = layui.form ;
     laydate = layui.laydate;
     laydate.render({     //创建时间选择框
@@ -188,7 +190,7 @@
       ,click: function(data, othis){
         var elem = $(this.elem)
         ,listId = elem.data('id'); //表格列表的预埋数据
-        url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method='+ data.method
+        url = '/log?method='+ data.method
         method = data.method
         if(data.method=='id'){
           $("#idinput1").show();
