@@ -5,6 +5,7 @@ from logging import handlers
 from time import time
 import traceback
 from flask import Flask, render_template, request, jsonify
+from flask_cors import *
 from service import service
 from config import Config
 from api.mode import Detail,List
@@ -37,6 +38,7 @@ class Main(object):
 
     s = service.Service()
     api = Flask(__name__) 
+    CORS(api, supports_credentials=True, resources=r"/*")
     @api.route('/',methods=['get']) 
     def help():
         return render_template('help.html')
@@ -83,6 +85,7 @@ class Main(object):
             ren = Main.s.get_log_byTime(request.args.get('start'),request.args.get('end'))
         elif method == 'all':
             ren = Main.s.get_logs()
+        make_response()
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()

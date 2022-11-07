@@ -65,7 +65,7 @@
               <label class="layui-form-label">开始时间：</label>
               </div>
               <div class="layui-col-md6">
-                <input type="text" id="time" name="lasttime"class="layui-input" placeholder="请输入">
+                <input type="text" id="timestart" name="lasttime"class="layui-input" placeholder="请输入">
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@
               <label class="layui-form-label">结束时间：</label>
               </div>
               <div class="layui-col-md6">
-                <input type="text" id="time" name="lasttime"class="layui-input" placeholder="请输入">
+                <input type="text" id="timeend" name="lasttime"class="layui-input" placeholder="请输入">
               </div>
             </div>
           </div>
@@ -103,7 +103,9 @@
     // timeStamp = timeStamp/1000
     // layer.msg(start);
     var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end)
-    var method = 'id'
+    // var url = '127.0.0.1:9252/log?method=time&start='+String(start)+'&end='+String(end)
+    var method = 'time'
+    layer.msg(url);
     var table = layui.table;
     //第一个实例
     table.render({
@@ -126,7 +128,8 @@
         ,{field: 'error', title: '错误信息', width: 100}
       ]]
     });
-    url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=id'
+    url = '127.0.0.1:9252/log?method=time'
+    url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time'
     var  form = layui.form ;
             $ = layui.jquery ;
              laydate = layui.laydate;
@@ -136,12 +139,12 @@
             });
     var dropdown = layui.dropdown
     ,$ = layui.jquery;
-    $("#idinput1").show();
-    $("#idinput2").show();
+    $("#idinput1").hide();
+    $("#idinput2").hide();
     $("#wordsinput1").hide();
     $("#wordsinput2").hide();
-    $("#timeinputstart").hide();
-    $("#timeinputend").hide();
+    $("#timeinputstart").show();
+    $("#timeinputend").show();
     dropdown.render({
       elem: '.method'
       ,data: [{
@@ -187,9 +190,6 @@
       }
     });
     var search = layui.form;
-    function retable(method){
-
-    }
     search.on('submit(search)', function (data) {
       if(method=='id'){
         old_url = url
@@ -200,6 +200,21 @@
           return
         }
         url = url+"&id=" + v;
+        table.reloadData('logstable', {
+          url:url
+        })
+        url = old_url
+      }
+      else if(method=='time'){
+        old_url = url
+        start = $("#timestart").val()
+        end = $("#timeend").val()
+        if(start==''&&end==''){
+          url = old_url
+          layer.msg("请输入时间！");
+          return
+        }
+        url = url+"&start=" + String(Date.parse(start)/1000) + '&end=' + String(Date.parse(end)/1000);
         table.reloadData('logstable', {
           url:url
         })
