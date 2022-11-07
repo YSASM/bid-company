@@ -44,7 +44,10 @@ class Main(object):
         return render_template('help.html')
     @api.route('/manage',methods=['get']) 
     def manage():
-        return render_template('manage.html')
+        return render_template('statistics.html')
+    @api.route('/managelog',methods=['get']) 
+    def managelog():
+        return render_template('log.html')
     @api.route('/list',methods=['get'])
     def list():
         start = int(float(time())*1000)
