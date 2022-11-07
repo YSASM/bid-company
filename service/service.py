@@ -228,7 +228,18 @@ class Service(object):
         ren = backlog.bejson(backlog)
         return ren
     def get_log_byTime(self,start,end):
-        pass
+        backlog = Log()
+        try:
+            logs = self.cld.get_by_time(start,end)
+            back = []
+            for log in logs:
+                back.append(self.cld.bejson(log))
+            backlog.logs = back
+        except:
+            exp = traceback.format_exc()
+            backlog.error = exp
+        ren = backlog.bejson(backlog)
+        return ren
     def get_log_byWords(self,words):
         pass
     def get_logs(self):

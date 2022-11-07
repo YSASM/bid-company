@@ -95,7 +95,14 @@
 </div>
 <script>
   layui.use(['form','laydate','dropdown','table'], function(){
-    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=all'
+    var data = new Date()
+    var start = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate()) + ' 00:00:00'
+    var end = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate()+1) + ' 00:00:00'
+    var start = Date.parse(start)/1000
+    var end = Date.parse(end)/1000
+    // timeStamp = timeStamp/1000
+    // layer.msg(start);
+    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end)
     var method = 'id'
     var table = layui.table;
     //第一个实例
@@ -180,6 +187,9 @@
       }
     });
     var search = layui.form;
+    function retable(method){
+
+    }
     search.on('submit(search)', function (data) {
       if(method=='id'){
         old_url = url
