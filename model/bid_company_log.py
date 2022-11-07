@@ -73,6 +73,12 @@ class CompanyLogDao(object):
         session.close()
         return ret
     @classmethod
+    def get_by_words(cls, words):
+        session = DBSession()
+        ret = session.query(CompanyLog).filter_by(words=words).all()
+        session.close()
+        return ret
+    @classmethod
     def get_by_time(cls, start,end):
         session = DBSession()
         ret = session.query(CompanyLog).filter(CompanyLog.create_time>start,CompanyLog.create_time<end).all()

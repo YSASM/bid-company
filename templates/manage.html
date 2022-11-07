@@ -95,17 +95,21 @@
 </div>
 <script>
   layui.use(['form','laydate','dropdown','table'], function(){
-    var data = new Date()
-    var start = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate()) + ' 00:00:00'
-    var end = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate()+1) + ' 00:00:00'
-    var start = Date.parse(start)/1000
-    var end = Date.parse(end)/1000
+    var data = new Date();
+    var start = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate());
+    $ = layui.jquery 
+    $("#timestart").val(start);
+    start = start + ' 00:00:00';
+    start = Date.parse(start)/1000;
+    var end = start+86400;
+    var endstr = new Date(end*1000)
+    endstr = String(endstr.getFullYear()) + '-' + String(endstr.getMonth()+1) + '-' +  String(endstr.getDate());
+    $("#timeend").val(endstr);
     // timeStamp = timeStamp/1000
     // layer.msg(start);
-    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end)
+    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end);
     // var url = '127.0.0.1:9252/log?method=time&start='+String(start)+'&end='+String(end)
-    var method = 'time'
-    layer.msg(url);
+    var method = 'time';
     var table = layui.table;
     //第一个实例
     table.render({
@@ -128,15 +132,16 @@
         ,{field: 'error', title: '错误信息', width: 100}
       ]]
     });
-    url = '127.0.0.1:9252/log?method=time'
+    // url = '127.0.0.1:9252/log?method=time'
     url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time'
     var  form = layui.form ;
-            $ = layui.jquery ;
-             laydate = layui.laydate;
-          
-        laydate.render({     //创建时间选择框
-              elem: '#time' //指定元素
-            });
+    laydate = layui.laydate;
+    laydate.render({     //创建时间选择框
+      elem: '#timestart'//指定元素
+    });
+    laydate.render({     //创建时间选择框
+      elem: '#timeend' //指定元素
+    });
     var dropdown = layui.dropdown
     ,$ = layui.jquery;
     $("#idinput1").hide();
@@ -196,7 +201,7 @@
         v = $("#id").val()
         if(v==''){
           url = old_url
-          layer.msg("空id");
+          layer.msg("空id！");
           return
         }
         url = url+"&id=" + v;
@@ -215,6 +220,22 @@
           return
         }
         url = url+"&start=" + String(Date.parse(start)/1000) + '&end=' + String(Date.parse(end)/1000);
+        layer.msg(url)
+        table.reloadData('logstable', {
+          url:url
+        })
+        url = old_url
+      }
+      else if(method=='words'){
+        old_url = url
+        v = $("#words").val()
+        if(v==''){
+          url = old_url
+          layer.msg("空words！");
+          return
+        }
+        url = url+"&words=" + v
+        layer.msg(url)
         table.reloadData('logstable', {
           url:url
         })
