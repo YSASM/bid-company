@@ -77,6 +77,8 @@ class Main(object):
     @api.route('/log',methods=['get'])
     def log():
         method = request.args.get('method')#id,time,words
+        page = int(request.args.get('page'))
+        limit = int(request.args.get('limit'))
         if method == 'id':
             ren = Main.s.get_log_byId(request.args.get('id'))
         elif method == 'words':
@@ -85,6 +87,20 @@ class Main(object):
             ren = Main.s.get_log_byTime(request.args.get('start'),request.args.get('end'))
         elif method == 'all':
             ren = Main.s.get_logs()
+        pages = []
+        p = []
+        l = 0
+        for i in ren['data']:
+            if l == limit:
+                pages.append(p)
+                p=[]
+                l=0
+                continue
+            p.append(i)
+            l+=1
+        if pages==[]:
+            pages.append(p)
+        ren['data']=pages[page-1]
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()

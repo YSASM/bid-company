@@ -94,7 +94,7 @@
   </div>
 </div>
 <script>
-  layui.use(['form','laydate','dropdown','table'], function(){
+  layui.use(['form','laydate','dropdown','table','laypage','laydate','util'], function(){
     var data = new Date();
     var start = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate());
     $ = layui.jquery 
@@ -110,7 +110,8 @@
     var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end);
     // var url = '127.0.0.1:9252/log?method=time&start='+String(start)+'&end='+String(end)
     var method = 'time';
-    var table = layui.table;
+    var laypage = layui.laypage //分页
+	  var	table = layui.table //表格
     //第一个实例
     table.render({
       elem: '#log'
@@ -127,13 +128,35 @@
         ,{field: 'code', title: '状态码', width: 100}
         ,{field: 'msg', title: '状态信息', width: 100}
         ,{field: 'request_time', title: '请求耗时', width: 100}
-        ,{field: 'create_time', title: '日志时间', width: 100}
+        ,{field: 'create_time', title: '日志时间戳', width: 100}
+        ,{field: 'create_time', width: 180, title: '提交时间', align:'center',templet: "<div>\{\{layui.util.toDateString(d.create_time*1000)\}\}</div>"}
         ,{field: 'data', title: '返回信息', width: 100}
         ,{field: 'error', title: '错误信息', width: 100}
       ]]
+      ,page: true
+      ,limits: [3,5,10]
+      ,limit: 10
+      
+      // ,parseData:function(res){
+      //   //解析分页数据
+      //   var result;
+      //   if (this.page.curr) {
+      //       result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+      //   } else {
+      //       result = res.data.slice(0, this.limit);
+      //   }
+ 
+      //   return {
+      //       "code": res.code, //解析接口状态
+      //       "msg": res.msg, //解析提示文本
+      //       "count": res.count, //解析数据长度
+      //       "data": result //解析数据列表
+      //   }
+      // }
     });
     // url = '127.0.0.1:9252/log?method=time'
     url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time'
+    url = 'http://127.0.0.1:9252/log?method=time'
     var  form = layui.form ;
     laydate = layui.laydate;
     laydate.render({     //创建时间选择框
