@@ -85,7 +85,6 @@ class Main(object):
             ren = Main.s.get_log_byTime(request.args.get('start'),request.args.get('end'))
         elif method == 'all':
             ren = Main.s.get_logs()
-        make_response()
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()
