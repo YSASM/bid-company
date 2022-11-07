@@ -74,34 +74,37 @@ class Main(object):
             ren = detail.bejson(detail)
             Main.s.add_log(Main.s.request_time(start),ren,'detail')
         return jsonify(ren)
+    def logpagedown(ren,page,limit):
+        pages = []
+        p = []
+        l = 0
+        for i in ren['data']:
+            p.append(i)
+            l+=1
+            if l == limit:
+                pages.append(p)
+                p=[]
+                l=0
+        pages.append(p)
+        ren['data']=pages[page-1]
+        return ren
     @api.route('/log',methods=['get'])
     def log():
         method = request.args.get('method')#id,time,words
         page = int(request.args.get('page'))
         limit = int(request.args.get('limit'))
+        pd = True
         if method == 'id':
             ren = Main.s.get_log_byId(request.args.get('id'))
+            pd = False
         elif method == 'words':
             ren = Main.s.get_log_byWords(request.args.get('words'))
         elif method == 'time':
             ren = Main.s.get_log_byTime(request.args.get('start'),request.args.get('end'))
         elif method == 'all':
             ren = Main.s.get_logs()
-        if page and limit:
-            pages = []
-            p = []
-            l = 0
-            for i in ren['data']:
-                if l == limit:
-                    pages.append(p)
-                    p=[]
-                    l=0
-                    continue
-                p.append(i)
-                l+=1
-            if pages==[]:
-                pages.append(p)
-            ren['data']=pages[page-1]
+        if page and limit and pd:
+            ren = Main.logpagedown(ren,page,limit)
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()

@@ -116,7 +116,7 @@ class Log(object):
         return {
             "code": 0 if data.error=="" else 1,
             "data": data.logs,
-            "num":len(data.logs),
+            "count":len(data.logs),
             "error" : data.error,#发生错误
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
         }
