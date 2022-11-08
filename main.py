@@ -1,53 +1,114 @@
 #!/usr/bin/python3
 # encoding:utf-8
-import json,logging
+import json,logging,hashlib
 from logging import handlers
 from time import time
 import traceback
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify,session,redirect,url_for,make_response
 from flask_cors import *
 from service import service
 from config import Config
 from api.mode import Detail,List
-
+from model.bid_admin import AdminDao,Admin
+logintoken = []
+logger = logging.getLogger()
+for h in logger.handlers:
+    logger.removeHandler(h)
+fmt = "[%(asctime)s] [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s"
+file_handler = handlers.TimedRotatingFileHandler(
+    filename="log/api.log", when="D", interval=1, backupCount=14
+)
+file_handler.setFormatter(logging.Formatter(fmt))
+file_handler.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+if Config.env() == "test" or Config.env() == "dev":
+    console_handler.setLevel(logging.DEBUG)
+else:
+    console_handler.setLevel(logging.ERROR)
+console_handler.setFormatter(logging.Formatter(fmt))
+logger.addHandler(console_handler)
 class Main(object):
     def __init__(self):
-        print(Config.get())
-        logger = logging.getLogger()
-        for h in logger.handlers:
-            logger.removeHandler(h)
-        fmt = "[%(asctime)s] [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s"
-        file_handler = handlers.TimedRotatingFileHandler(
-            filename="log/api.log", when="D", interval=1, backupCount=14
-        )
-        file_handler.setFormatter(logging.Formatter(fmt))
-        file_handler.setLevel(logging.DEBUG)
-
-        logger.addHandler(file_handler)
-        logger.setLevel(logging.DEBUG)
-
-        console_handler = logging.StreamHandler()
-        if Config.env() == "test" or Config.env() == "dev":
-            console_handler.setLevel(logging.DEBUG)
-        else:
-            console_handler.setLevel(logging.ERROR)
-
-        console_handler.setFormatter(logging.Formatter(fmt))
-        logger.addHandler(console_handler)
-
-
+        # print(Config.get())
+        pass
+    ad = AdminDao()
     s = service.Service()
     api = Flask(__name__) 
+    api.secret_key='\xf1\x92Y\xdf\x8ejY\x04\x96\xb4V\x88\xfb\xfc\xb5\x18F\xa3\xee\xb9\xb9t\x01\xf0\x96'  
     CORS(api, supports_credentials=True, resources=r"/*")
+    def isLogin(self,ip,t,token=None):
+        global logintoken
+        if token:
+            for lt in logintoken:
+                if token == lt[0]:
+                    lt[1] = t
+                    return token
+            return False
+        username = session.get('username')
+        password = session.get('password')
+        if not username or not password:
+            return False
+        token = hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
+        for lt in logintoken:
+            if token == lt[0]:
+                lt[1] = t
+                return token
+        if Main.ad.login(username,password):
+            logintoken.append([token,t])
+            return token
+        return False
+
     @api.route('/',methods=['get']) 
     def help():
         return render_template('help.html')
-    @api.route('/manage',methods=['get']) 
+    @api.route("/login",methods=["POST","GET"])
+    def login():
+        if request.method=='POST':
+            session['username']=request.form['username']
+            session['password']=request.form['password']
+            return redirect(url_for('manage'))
+        return """
+            <form action="" method="post">
+                <p><input type=text name=username>
+                <p><input type=text name=password>
+                <p><input type=submit value=Login>
+            </form>
+            """
+    @api.route('/manage',methods=['get'])
     def manage():
-        return render_template('statistics.html')
-    @api.route('/managelog',methods=['get']) 
+        ip = request.remote_addr
+        token = request.headers.get('token')
+        token = Main().isLogin(ip,time(),token=token)
+        if token:
+            res = make_response(redirect(url_for('managestatistics')))
+            res.headers['token'] = token
+            return res
+        return redirect(url_for('login'))
+    
+    @api.route('/managestatistics',methods=['get']) 
+    def managestatistics():
+        ip = request.remote_addr
+        token = request.headers.get('token')
+        token = Main().isLogin(ip,time(),token=token)
+        if token:
+            res = make_response(render_template('statistics.html'))
+            res.headers['token'] = token
+            return res
+        return redirect(url_for('login'))
+
+    @api.route('/managelog',methods=['get'],) 
     def managelog():
-        return render_template('log.html')
+        ip = request.remote_addr
+        token = request.headers.get('token')
+        token = Main().isLogin(ip,time(),token=token)
+        if token:
+            res = make_response(render_template('log.html'))
+            res.headers['token'] = token
+            return res
+        return redirect(url_for('login'))
+        
     @api.route('/list',methods=['get'])
     def list():
         start = int(float(time())*1000)
