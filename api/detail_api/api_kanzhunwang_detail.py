@@ -33,6 +33,5 @@ class KanzhunwangDetail(object):
             data.name = r['value']
             data.keyNo = r['encSearchId']
             back.append(data.bejson(data))
-        detail.num = len(back)
-        detail.list = back
+        detail.data = back
         return detail

@@ -13,8 +13,7 @@ class DetailData(object):
 class Detail(object):
     def __init__(self):
         self.code = 0
-        self.list = []
-        self.num = 0
+        self.data = []
         self.type = ''
         self.ip = ""
         self.msg = ""
@@ -25,11 +24,9 @@ class Detail(object):
         return {
             "code": 0 if data.error=="" else 1,#返回状态码
             "words":data.words,#搜索词
-            "data": {
-                "list": data.list,#公司列表
-                "num": data.num,#公司数
-                "type": data.type#api类型（qichacha。。。
-            },
+            "data": data.data,
+            "type": data.type,#api类型（qichacha。
+            "count": len(data.data),#公司数
             "error" : data.error,#发生错误
             "ip": data.ip,#请求IP
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
@@ -86,7 +83,7 @@ class ListData(object):
 class List(object):
     def __init__(self):
         self.code = 0
-        self.content = []
+        self.data = []
         self.type = ''
         self.ip = ""
         self.msg = ""
@@ -97,10 +94,8 @@ class List(object):
         return {
             "code": 0 if data.error=="" else 1,#返回状态码
             "words":data.words,#搜索词
-            "data": {
-                "content": data.content,#公司详情
-                "type": data.type#api类型
-            },
+            "data": data.data,
+            "type": data.type,#api类型
             "error" : data.error,#发生错误
             "ip": data.ip,#请求ip
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息

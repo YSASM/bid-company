@@ -146,7 +146,7 @@ class KanzhunwangList(object):
         except:
             pass
         try:
-            list.content = data.bejson(data)
+            list.data = data.bejson(data)
         except:
             pass
         return list

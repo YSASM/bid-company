@@ -147,7 +147,7 @@
         ,{field: 'msg', title: '状态信息', width: 100}
         ,{field: 'request_time', title: '请求耗时', width: 100}
         ,{field: 'create_time', width: 180, title: '日志时间', templet: "<div>\{\{layui.util.toDateString(d.create_time*1000)\}\}</div>"}
-        ,{field: 'data', title: '返回信息', width: 100,templet:"<div>\{\{JSON.parse(d.data)\}\}</div>"}
+        ,{field: 'data', title: '返回信息', width: 100,templet:"<div>\{\{JSON.stringify(d.data)\}\}</div>"}
         ,{field: 'error', title: '错误信息', width: 250}
       ]]
       ,page: true

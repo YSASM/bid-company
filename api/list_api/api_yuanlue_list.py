@@ -27,5 +27,5 @@ class YuanlueList(object):
         data.web = company.web
         data.address = company.address
         data.company_range = company.company_range
-        list.content = data.bejson(data)
+        list.data = data.bejson(data)
         return list

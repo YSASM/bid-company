@@ -36,7 +36,7 @@ class Service(object):
         cy_log.words = ren['words']
         cy_log.request_time = request_time
         cy_log.create_time = int(time.time())
-        cy_log.api_name = ren['data']['type']
+        cy_log.api_name = ren['type']
         cy_log.type = method
         cy_log.error = ren['error']
         self.add(cy_log)
@@ -56,7 +56,7 @@ class Service(object):
     def set_company(self,company):
         self.cd.update(company)
     def add_company_detail(self,detail):
-        for item in detail.list:
+        for item in detail.data:
             if self.exist_detail(item):
                 self.update_company_detail(item)
                 continue
@@ -71,59 +71,59 @@ class Service(object):
         xm_company.logo = item['logo']
         self.set_company(xm_company)
     def update_company_list(self,list):
-        xm_company = self.get_company(get_md5(list.content['name']))
-        xm_company.registration_status = list.content['registration_status']
-        xm_company.corporate_representative=list.content['corporate_representative']
-        xm_company.registered_capital=list.content['registered_capital']
-        xm_company.incorporation_date=list.content['incorporation_date']
-        xm_company.approval_date=list.content['approval_date']
-        xm_company.area=list.content['area']
-        xm_company.phone=list.content['phone']
-        xm_company.email=list.content['email']
-        xm_company.credit_code=list.content['credit_code']
-        xm_company.taxpayer_num=list.content['taxpayer_num']
-        xm_company.registration_num=list.content['registration_num']
-        xm_company.organization_code=list.content['organization_code']
-        xm_company.insured_persons=list.content['insured_persons']
-        xm_company.enterprise_type=list.content['enterprise_type']
-        xm_company.industry=list.content['industry']
-        xm_company.old_name=list.content['old_name']
-        xm_company.en_name=list.content['en_name']
-        xm_company.web=list.content['web']
-        xm_company.address=list.content['address']
-        xm_company.company_range=list.content['company_range']
+        xm_company = self.get_company(get_md5(list.data['name']))
+        xm_company.registration_status = list.data['registration_status']
+        xm_company.corporate_representative=list.data['corporate_representative']
+        xm_company.registered_capital=list.data['registered_capital']
+        xm_company.incorporation_date=list.data['incorporation_date']
+        xm_company.approval_date=list.data['approval_date']
+        xm_company.area=list.data['area']
+        xm_company.phone=list.data['phone']
+        xm_company.email=list.data['email']
+        xm_company.credit_code=list.data['credit_code']
+        xm_company.taxpayer_num=list.data['taxpayer_num']
+        xm_company.registration_num=list.data['registration_num']
+        xm_company.organization_code=list.data['organization_code']
+        xm_company.insured_persons=list.data['insured_persons']
+        xm_company.enterprise_type=list.data['enterprise_type']
+        xm_company.industry=list.data['industry']
+        xm_company.old_name=list.data['old_name']
+        xm_company.en_name=list.data['en_name']
+        xm_company.web=list.data['web']
+        xm_company.address=list.data['address']
+        xm_company.company_range=list.data['company_range']
         self.set_company(xm_company)
     def add_company_list(self,list):
         company = Company()
-        # company.logo = list.content['logo']
-        company.name = list.content['name']
-        company.name_md5 = get_md5(list.content['name'])
-        company.registration_status = list.content['registration_status']
-        company.corporate_representative=list.content['corporate_representative']
-        company.registered_capital=list.content['registered_capital']
-        company.incorporation_date=list.content['incorporation_date']
-        company.approval_date=list.content['approval_date']
-        company.area=list.content['area']
-        company.phone=list.content['phone']
-        company.email=list.content['email']
-        company.credit_code=list.content['credit_code']
-        company.taxpayer_num=list.content['taxpayer_num']
-        company.registration_num=list.content['registration_num']
-        company.organization_code=list.content['organization_code']
-        company.insured_persons=list.content['insured_persons']
-        company.enterprise_type=list.content['enterprise_type']
-        company.industry=list.content['industry']
-        company.old_name=list.content['old_name']
-        company.en_name=list.content['en_name']
-        company.web=list.content['web']
-        company.address=list.content['address']
-        company.company_range=list.content['company_range']
+        # company.logo = list.data['logo']
+        company.name = list.data['name']
+        company.name_md5 = get_md5(list.data['name'])
+        company.registration_status = list.data['registration_status']
+        company.corporate_representative=list.data['corporate_representative']
+        company.registered_capital=list.data['registered_capital']
+        company.incorporation_date=list.data['incorporation_date']
+        company.approval_date=list.data['approval_date']
+        company.area=list.data['area']
+        company.phone=list.data['phone']
+        company.email=list.data['email']
+        company.credit_code=list.data['credit_code']
+        company.taxpayer_num=list.data['taxpayer_num']
+        company.registration_num=list.data['registration_num']
+        company.organization_code=list.data['organization_code']
+        company.insured_persons=list.data['insured_persons']
+        company.enterprise_type=list.data['enterprise_type']
+        company.industry=list.data['industry']
+        company.old_name=list.data['old_name']
+        company.en_name=list.data['en_name']
+        company.web=list.data['web']
+        company.address=list.data['address']
+        company.company_range=list.data['company_range']
         company.create_time=int(time.time())
         company.update_time=company.create_time
         self.cd.add(company)
     #下拉列表查询
     def exist_list(self,list):
-        md5 = get_md5(list.content['name'])
+        md5 = get_md5(list.data['name'])
         return self.cs.exist(md5)
 
     def get_detail(self,method,start,words,ip):
@@ -148,7 +148,7 @@ class Service(object):
                 ren = detail.bejson(detail)
                 self.add_log(self.request_time(start),ren,method)
                 continue
-            if detail.num == 0:
+            if len(detail.data) == 0:
                 continue
             if detail.type!="yuanlue":
                 try:

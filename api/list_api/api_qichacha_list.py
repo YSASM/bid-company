@@ -102,6 +102,6 @@ class QichachaList(object):
         try :
             data.company_range = temp[9][1].text.replace(' ','')
         except:pass
-        list.content = data.bejson(data)
+        list.data = data.bejson(data)
         return list
         
