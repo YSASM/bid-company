@@ -75,13 +75,7 @@ class Main(object):
             session['username']=request.form['username']
             session['password']=request.form['password']
             return redirect(url_for('manage'))
-        return """
-            <form action="/login" method="post">
-                <p><input type=text name=username>
-                <p><input type=text name=password>
-                <p><input type=submit value=Login>
-            </form>
-            """
+        return render_template('login.html')
     @api.route('/manage',methods=['get'])
     def manage():
         ip = request.remote_addr
