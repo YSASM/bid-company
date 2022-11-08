@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # encoding:utf-8
-import json,logging,hashlib
+import json,logging,hashlib,os,datetime
 from logging import handlers
 from time import time
 import traceback
@@ -36,7 +36,9 @@ class Main(object):
     ad = AdminDao()
     s = service.Service()
     api = Flask(__name__) 
-    api.secret_key='\xf1\x92Y\xdf\x8ejY\x04\x96\xb4V\x88\xfb\xfc\xb5\x18F\xa3\xee\xb9\xb9t\x01\xf0\x96'  
+    api.config['SECRET_KEY']=os.urandom(24)
+    # session.permanent=True
+    api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
     CORS(api, supports_credentials=True, resources=r"/*")
     def isLogin(self,ip,t,token=None):
         global logintoken
@@ -63,6 +65,10 @@ class Main(object):
     @api.route('/',methods=['get']) 
     def help():
         return render_template('help.html')
+    @api.route("/loginout",methods=["POST"])
+    def loginout():
+        session.clear()
+        return redirect(url_for('manage'))
     @api.route("/login",methods=["POST","GET"])
     def login():
         if request.method=='POST':
@@ -70,7 +76,7 @@ class Main(object):
             session['password']=request.form['password']
             return redirect(url_for('manage'))
         return """
-            <form action="" method="post">
+            <form action="/login" method="post">
                 <p><input type=text name=username>
                 <p><input type=text name=password>
                 <p><input type=submit value=Login>
@@ -104,7 +110,7 @@ class Main(object):
         token = request.headers.get('token')
         token = Main().isLogin(ip,time(),token=token)
         if token:
-            res = make_response(render_template('log.html'))
+            res = make_response(render_template('log.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
             res.headers['token'] = token
             return res
         return redirect(url_for('login'))

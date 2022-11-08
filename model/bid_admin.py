@@ -75,5 +75,16 @@ class AdminDao(object):
         for i in o:
             if i.password == hashlib.md5((password+i.salt).encode("utf-8")).hexdigest():
                 return True
+        return False
+    @classmethod
+    def get_avatar(cls,username,password):
+        session = DBSession()
+        o = session.query(Admin).filter(Admin.username == username).all()
+        session.close()
+        password = hashlib.md5(password.encode("utf-8")).hexdigest()
+        if not o:
             return False
+        for i in o:
+            if i.password == hashlib.md5((password+i.salt).encode("utf-8")).hexdigest():
+                return i.avatar
         return False

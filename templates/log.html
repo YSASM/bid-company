@@ -8,19 +8,37 @@
   <script src="/static/layui.js"></script>
 </head>
 <body>
+<form action="/login" method="get" id="loginout"></form>
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo layui-bg-black">企业API管理面板</div>
+    <div class="layui-logo layui-hide-xs layui-bg-black">layout demo</div>
     <!-- 头部区域（可配合layui 已有的水平导航） -->
     <ul class="layui-nav layui-layout-left">
       <!-- 移动端显示 -->
       <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
         <i class="layui-icon layui-icon-spread-left"></i>
       </li>
-      <!-- <li class="layui-nav-item layui-hide-xs"><a href="">nav 1</a></li> -->
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+        <a href="javascript:;">
+          <img src="{{avatar}}" class="layui-nav-img">
+          {{username}}
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">Your Profile</a></dd>
+          <dd><a href="">Settings</a></dd>
+          <dd><a onclick="document.getElementById('loginout').submit();">Sign out</a></dd>
+        </dl>
+      </li>
+      <!-- <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+        <a href="javascript:;">
+          <i class="layui-icon layui-icon-more-vertical"></i>
+        </a>
+      </li> -->
     </ul>
   </div>
-  
+
   <div id="leftlan" class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
@@ -128,8 +146,8 @@
         ,{field: 'code', title: '状态码', width: 100}
         ,{field: 'msg', title: '状态信息', width: 100}
         ,{field: 'request_time', title: '请求耗时', width: 100}
-        ,{field: 'create_time', width: 180, title: '日志时间', align:'center',templet: "<div>\{\{layui.util.toDateString(d.create_time*1000)\}\}</div>"}
-        ,{field: 'data', title: '返回信息', width: 100}
+        ,{field: 'create_time', width: 180, title: '日志时间', templet: "<div>\{\{layui.util.toDateString(d.create_time*1000)\}\}</div>"}
+        ,{field: 'data', title: '返回信息', width: 100,templet:"<div>\{\{JSON.parse(d.data)\}\}</div>"}
         ,{field: 'error', title: '错误信息', width: 250}
       ]]
       ,page: true
