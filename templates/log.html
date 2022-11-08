@@ -52,10 +52,7 @@
     <!-- 内容主体区域 -->
     <div class="layui-card">
       <div class="layui-container"> 
-        <div class="layui-row layui-col-space10"style="margin-top:10px;">
-          <div class="layui-col-md2">
-            <button class="layui-btn method layui-btn-primary" data-id="111">查询方式</button>
-          </div>
+        <div class="layui-row layui-col-space10"style="margin-top:10px;margin-left: 70px" >
           <div id="idinput1" class="layui-col-md4">
             <div class="layui-col-md6">
                 <div class="layui-col-md6">
@@ -97,6 +94,9 @@
                 <input type="text" id="timeend" name="lasttime"class="layui-input" placeholder="请输入">
               </div>
             </div>
+          </div>
+          <div class="layui-col-md2">
+            <button class="layui-btn method layui-btn-primary" data-id="111">查询方式</button>
           </div>
           <div class="layui-col-md2">
             <button  class="layui-btn layui-btn-primary" lay-submit lay-filter="search">查找</button>
@@ -203,10 +203,9 @@
         ,method: 'words'
       }]
       ,click: function(data, othis){
-        var elem = $(this.elem)
-        ,listId = elem.data('id'); //表格列表的预埋数据
-        url = '/log?method='+ data.method
-        method = data.method
+        var elem = $(this.elem);
+        url = '/log?method='+ data.method;
+        method = data.method;
         if(data.method=='id'){
           $("#idinput1").show();
           $("#idinput2").show();

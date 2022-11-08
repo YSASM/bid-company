@@ -91,7 +91,7 @@ class QichachaList(object):
             data.industry = temp[7][1].text.replace(' ','')
         except:pass
         try :
-            en_name = temp[7][3].text.split(',')[0].replace(' Co.','')
+            data.en_name = temp[7][3].text.split(',')[0].replace(' Co.','')
         except:pass
         try :
             data.web = temp2[3].find_all('span')[6].text.replace(' ','')
