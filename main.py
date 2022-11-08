@@ -93,7 +93,7 @@ class Main(object):
         token = request.headers.get('token')
         token = Main().isLogin(ip,time(),token=token)
         if token:
-            res = make_response(render_template('statistics.html'))
+            res = make_response(render_template('statistics.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
             res.headers['token'] = token
             return res
         return redirect(url_for('login'))
