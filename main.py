@@ -150,7 +150,10 @@ class Main(object):
                 p=[]
                 l=0
         pages.append(p)
-        ren['data']=pages[page-1]
+        try:
+            ren['data']=pages[page-1]
+        except IndexError:
+            ren['data']=[]
         return ren
     @api.route('/statistics',methods=['get'])
     def statistics():
