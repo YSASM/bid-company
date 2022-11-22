@@ -156,8 +156,12 @@ class Main(object):
     def statistics():
         start = request.args.get('start')
         end = request.args.get('end')
-        page = int(request.args.get('page'))
-        limit = int(request.args.get('limit'))
+        page = request.args.get('page')
+        if page:
+            page = int(page)
+        limit = request.args.get('limit')
+        if limit:
+            limit = int(limit)
         pd = True
         method = request.args.get('method')#id,time,words
         if method == "error":
@@ -174,8 +178,12 @@ class Main(object):
     @api.route('/log',methods=['get'])
     def log():
         method = request.args.get('method')#id,time,words
-        page = int(request.args.get('page'))
-        limit = int(request.args.get('limit'))
+        page = request.args.get('page')
+        if page:
+            page = int(page)
+        limit = request.args.get('limit')
+        if limit:
+            limit = int(limit)
         pd = True
         if method == 'id':
             ren = Main.s.get_log_byId(request.args.get('id'))
