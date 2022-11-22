@@ -10,8 +10,8 @@ from service import service
 from config import Config
 from api.mode import Detail,List
 from model.bid_admin import AdminDao,Admin
-# from qqwry import updateQQwry
-# result = updateQQwry('base/qqwry.dat')
+from qqwry import updateQQwry
+result = updateQQwry('base/qqwry.dat')
 logintoken = []
 logger = logging.getLogger()
 for h in logger.handlers:
