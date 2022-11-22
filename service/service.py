@@ -298,15 +298,15 @@ class Service(object):
             back.error = exp
         ren = back.bejson(back)
         return ren
-    def check_ip(self,argv):
-        q = QQwry()
-        q.load_file('base/qqwry.dat')
+    def check_ip(self,q,argv):
         result = q.lookup(argv)
         if not result:
             return '其他'
         result,x=result
         return result
     def st_address(self,start,end):
+        q = QQwry()
+        q.load_file('base/qqwry.dat')
         back = St_Mode()
         logs = self.cld.get_by_time(start,end)
         address = []
@@ -316,7 +316,7 @@ class Service(object):
             if ip == '127.0.0.1':
                 where = '本地访问'
             else:
-                where = self.check_ip(ip)
+                where = self.check_ip(q,ip)
             address.append(where)
         address = Counter(address)
         for a in address:
