@@ -10,6 +10,7 @@ from service.message import MessageService
 from api import detail_api,list_api
 from api.mode import Detail,List,Log,St_Mode
 from model.bid_company_log import CompanyLog,CompanyLogDao
+from qqwry import QQwry
 
 class Service(object):
     def __init__(self):
@@ -295,6 +296,32 @@ class Service(object):
         except:
             exp = traceback.format_exc()
             back.error = exp
+        ren = back.bejson(back)
+        return ren
+    def check_ip(self,argv):
+        q = QQwry()
+        q.load_file('base/qqwry.dat')
+        result = q.lookup(argv)
+        if not result:
+            return '其他'
+        result,x=result
+        return result
+    def st_address(self,start,end):
+        back = St_Mode()
+        logs = self.cld.get_by_time(start,end)
+        address = []
+        for log in logs:
+            ip = log.ip
+            # ip = '110.41.14.33'
+            if ip == '127.0.0.1':
+                where = '本地访问'
+            else:
+                where = self.check_ip(ip)
+            address.append(where)
+        address = Counter(address)
+        for a in address:
+            back.data.append({'words':a,'times':address[a]})
+            back.data.sort(key = lambda i:i['times'],reverse=True)
         ren = back.bejson(back)
         return ren
 

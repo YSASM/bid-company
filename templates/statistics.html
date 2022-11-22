@@ -62,7 +62,7 @@
         </div>
         <div class="layui-row layui-col-space12"style="margin-top:10px;">
           <div class="layui-col-md6" id="errortablediv"><div>发生错误情况</div></div>
-          <div class="layui-col-md6" id="wordstablediv"><div>用户搜索情况统计</div></div>
+          <div class="layui-col-md4" id="wordstablediv"><div>用户搜索情况统计</div></div>
         </div>
       </div>
   </div>
@@ -106,7 +106,7 @@
         {field: 'id', title: 'ID', width:100, sort: true, fixed: 'left'}
         ,{field: 'type', title: '请求类型', width:100} 
         ,{field: 'create_time', width: 180, title: '错误时间', templet: "<div>\{\{layui.util.toDateString(d.create_time*1000)\}\}</div>"}
-        ,{field: 'error', title: '错误信息', width: 100}
+        ,{field: 'error', title: '错误信息', width: 270}
       ]]
       ,page: true
       ,limits: [10,20,50,100,500]
