@@ -334,7 +334,7 @@ class Service(object):
         for log in logs:
             if log.type=='list':
                 retimes['list'].append(log.request_time)
-            elif log.type=='details':
+            elif log.type=='detail':
                 retimes['detail'].append(log.request_time)
         retimes['list'] = sum(retimes['list'])/len(retimes['list']) if retimes['list']!=[] else 0
         retimes['detail'] = sum(retimes['detail'])/len(retimes['detail']) if retimes['detail']!=[] else 0
