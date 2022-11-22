@@ -119,8 +119,8 @@
       ,url: '/statistics?method=words&start='+start+'&end='+end //数据接口
       ,page: true //开启分页
       ,cols: [[ //表头
-        {field: 'words', title: '搜索词', width:100} 
-        ,{field: 'times', title: '搜索次数', width: 100, sort: true}
+        {field: 'times', title: '搜索次数', width: 100, sort: true, fixed: 'left'}
+        ,{field: 'words', title: '搜索词', width:100} 
       ]]
       ,page: true
       ,limits: [10,20,50,100,500]

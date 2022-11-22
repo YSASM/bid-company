@@ -291,6 +291,7 @@ class Service(object):
             words = Counter(wdlist)
             for word in words:
                 back.data.append({'words':word,'times':words[word]})
+                back.data.sort(key = lambda i:i['times'],reverse=True)
         except:
             exp = traceback.format_exc()
             back.error = exp
