@@ -103,8 +103,8 @@
     var wordstable = layui.table
     var addresstable = layui.table
     var timetable = layui.table
-    start = 0
-    end = 10000000000000000000
+    // start = 0
+    // end = 10000000000000000000
     //第一个实例
     errortable.render({
       elem: '#errortable'
@@ -180,10 +180,10 @@
       wordstable.reloadData('wordstable', {
         url:'/statistics?method=words&start='+String(start)+'&end='+String(end)
       })
-      addresstable.reloadData('errortable', {
+      addresstable.reloadData('addresstable', {
         url:'/statistics?method=address&start='+String(start)+'&end='+String(end)
       })
-      timetable.reloadData('wordstable', {
+      timetable.reloadData('timetable', {
         url:'/statistics?method=time&start='+String(start)+'&end='+String(end)
       })
 	  });
