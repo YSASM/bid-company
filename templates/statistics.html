@@ -135,7 +135,7 @@
       t = $("#selecttime").val()
       start = Date.parse(t+' 0:0:0')/1000
       end = start+86400
-      layer.msg(end)
+      // layer.msg(end)
       errortable.reloadData('errortable', {
         url:'/statistics?method=error&start='+String(start)+'&end='+String(end)
       })
