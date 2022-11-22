@@ -20,6 +20,8 @@ class Service(object):
         self.cd = CompanyDao()
         self.cld = CompanyLogDao()
         self.add = self.cld.add
+        self.q = QQwry()
+        self.q.load_file('base/qqwry.dat')
 
     def send_alarm(self, title, exp, receiver="wujiefeng"):
         message = []
@@ -298,15 +300,13 @@ class Service(object):
             back.error = exp
         ren = back.bejson(back)
         return ren
-    def check_ip(self,q,argv):
-        result = q.lookup(argv)
+    def check_ip(self,argv):
+        result = self.q.lookup(argv)
         if not result:
             return '其他'
         result,x=result
         return result
     def st_address(self,start,end):
-        q = QQwry()
-        q.load_file('base/qqwry.dat')
         back = St_Mode()
         logs = self.cld.get_by_time(start,end)
         address = []
@@ -316,7 +316,7 @@ class Service(object):
             if ip == '127.0.0.1':
                 where = '本地访问'
             else:
-                where = self.check_ip(q,ip)
+                where = self.check_ip(ip)
             address.append(where)
         address = Counter(address)
         for a in address:

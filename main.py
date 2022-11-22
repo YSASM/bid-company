@@ -80,7 +80,7 @@ class Main(object):
         return render_template('login.html')
     @api.route('/manage',methods=['get'])
     def manage():
-        ip = request.remote_addr
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token = request.headers.get('token')
         token = Main().isLogin(ip,time(),token=token)
         if token:
@@ -91,7 +91,7 @@ class Main(object):
     
     @api.route('/managestatistics',methods=['get']) 
     def managestatistics():
-        ip = request.remote_addr
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token = request.headers.get('token')
         token = Main().isLogin(ip,time(),token=token)
         if token:
@@ -102,7 +102,7 @@ class Main(object):
 
     @api.route('/managelog',methods=['get'],) 
     def managelog():
-        ip = request.remote_addr
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token = request.headers.get('token')
         token = Main().isLogin(ip,time(),token=token)
         if token:
@@ -117,7 +117,7 @@ class Main(object):
         try:
             words = request.args.get('words')
             type = request.args.get('type')
-            ip = request.remote_addr
+            ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
             ren = Main.s.get('list',words,ip,start,type=type)
         except:
             list = List()
@@ -131,7 +131,7 @@ class Main(object):
         start = int(float(time())*1000)
         try:
             words = request.args.get('words')
-            ip = request.remote_addr
+            ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
             ren = Main.s.get('detail',words,ip,start)
         except:
             detail = Detail()
