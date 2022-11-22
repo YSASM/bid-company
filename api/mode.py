@@ -115,3 +115,15 @@ class Log(object):
             "error" : data.error,#发生错误
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
         }
+class St_Mode(object):
+    def __init__(self):
+        self.error = ""
+        self.data=[]
+
+    def bejson(self,data):
+        return {
+            "code": 0 if data.error=="" else 1,
+            "data": data.data,
+            "error" : data.error,#发生错误
+            "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
+        }

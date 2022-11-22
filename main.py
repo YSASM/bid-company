@@ -138,7 +138,7 @@ class Main(object):
             ren = detail.bejson(detail)
             Main.s.add_log(Main.s.request_time(start),ren,'detail')
         return jsonify(ren)
-    def logpagedown(ren,page,limit):
+    def pagedown(ren,page,limit):
         pages = []
         p = []
         l = 0
@@ -152,6 +152,25 @@ class Main(object):
         pages.append(p)
         ren['data']=pages[page-1]
         return ren
+    @api.route('/statistics',methods=['get'])
+    def statistics():
+        start = request.args.get('start')
+        end = request.args.get('end')
+        page = int(request.args.get('page'))
+        limit = int(request.args.get('limit'))
+        pd = True
+        method = request.args.get('method')#id,time,words
+        if method == "error":
+            ren = Main.s.st_error(start,end)
+        elif method == "words":
+            ren = Main.s.st_words(start,end)
+        elif method == "time":
+            pass
+        elif method == "address":
+            pass
+        if page and limit and pd:
+            ren = Main.pagedown(ren,page,limit)
+        return jsonify(ren)
     @api.route('/log',methods=['get'])
     def log():
         method = request.args.get('method')#id,time,words
@@ -168,7 +187,7 @@ class Main(object):
         elif method == 'all':
             ren = Main.s.get_logs()
         if page and limit and pd:
-            ren = Main.logpagedown(ren,page,limit)
+            ren = Main.pagedown(ren,page,limit)
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()

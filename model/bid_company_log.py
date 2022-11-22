@@ -49,20 +49,8 @@ class CompanyLogDao(object):
         session.close()
         return o
     def bejson(self,companylog):
-        try:
-            data = json.loads(companylog.data.replace("\'","\""))
-        except:
-            data = companylog.data
         return{
             "id":companylog.id,
-            "words":companylog.words,
-            "msg":companylog.msg,
-            "ip":companylog.ip,
-            "code":companylog.code,
-            "data":data,
-            "create_time":companylog.create_time,
-            "request_time":companylog.request_time,
-            "api_name":companylog.api_name,
             "type":companylog.type,
             "error":companylog.error
         }
@@ -84,4 +72,15 @@ class CompanyLogDao(object):
         ret = session.query(CompanyLog).filter(CompanyLog.create_time>start,CompanyLog.create_time<end).all()
         session.close()
         return ret
-    
+    @classmethod
+    def st_error(cls,start,end):
+        session = DBSession()
+        ret = session.query(CompanyLog).filter(CompanyLog.create_time>start,CompanyLog.create_time<end,CompanyLog.error!='').all()
+        session.close()
+        return ret
+    @classmethod
+    def st_words(cls,start,end):
+        session = DBSession()
+        ret = session.query(CompanyLog).filter(CompanyLog.create_time>start,CompanyLog.create_time<end,CompanyLog.type=='detail').all()
+        session.close()
+        return ret

@@ -1,4 +1,5 @@
 from base.get_md5 import get_md5
+from collections import Counter
 from model.bid_company import Company, CompanyDao
 from service.company import CompanyService
 from service.message import MessageService
@@ -7,7 +8,7 @@ import traceback
 from config.config import Config
 from service.message import MessageService
 from api import detail_api,list_api
-from api.mode import Detail,List,Log
+from api.mode import Detail,List,Log,St_Mode
 from model.bid_company_log import CompanyLog,CompanyLogDao
 
 class Service(object):
@@ -266,3 +267,35 @@ class Service(object):
             backlog.error = exp
         ren = backlog.bejson(backlog)
         return ren
+    def st_error(self,start,end):
+        back = St_Mode()
+        logs = self.cld.st_error(start,end)
+        try:
+            for log in logs:
+                back.data.append(self.cld.bejson(log))         
+        except:
+            exp = traceback.format_exc()
+            back.error = exp
+        ren = back.bejson(back)
+        return ren
+    def st_words(self,start,end):
+        # http://www.inte.net/tool/ip/api.ashx?ip=183.136.213.98&datatype=json
+        back = St_Mode()
+        logs = self.cld.st_words(start,end)
+        try:
+            wdlist=[]
+            for log in logs:
+                if log.words == '':
+                    continue
+                wdlist.append(log.words)
+            words = Counter(wdlist)
+            for word in words:
+                back.data.append({'words':word,'times':words[word]})
+        except:
+            exp = traceback.format_exc()
+            back.error = exp
+        ren = back.bejson(back)
+        return ren
+
+        
+        
