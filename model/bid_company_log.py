@@ -49,8 +49,27 @@ class CompanyLogDao(object):
         session.close()
         return o
     def bejson(self,companylog):
+        try:
+            data = json.loads(companylog.data.replace("\'","\""))
+        except:
+            data = companylog.data
         return{
             "id":companylog.id,
+            "words":companylog.words,
+            "msg":companylog.msg,
+            "ip":companylog.ip,
+            "code":companylog.code,
+            "data":data,
+            "create_time":companylog.create_time,
+            "request_time":companylog.request_time,
+            "api_name":companylog.api_name,
+            "type":companylog.type,
+            "error":companylog.error
+        }
+    def bejson2(self,companylog):
+        return{
+            "id":companylog.id,
+            "create_time":companylog.create_time,
             "type":companylog.type,
             "error":companylog.error
         }

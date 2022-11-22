@@ -272,7 +272,7 @@ class Service(object):
         logs = self.cld.st_error(start,end)
         try:
             for log in logs:
-                back.data.append(self.cld.bejson(log))         
+                back.data.append(self.cld.bejson2(log))         
         except:
             exp = traceback.format_exc()
             back.error = exp

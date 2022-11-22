@@ -51,9 +51,18 @@
   <div id="content" class="layui-body">
     <!-- 内容主体区域 -->
     <div class="layui-card">
-      <div class="layui-container"> 
-        <div class="layui-row layui-col-space10"style="margin-top:10px;">
-          
+      <div class="layui-container">
+        <div class="layui-row layui-col-space12"style="margin-top:10px;">
+          <div class="layui-col-md6">
+            <input type="text" id="selecttime" name="selecttime"class="layui-input" placeholder="请输入">
+          </div>
+          <div class="layui-col-md6">
+            <button  class="layui-btn layui-btn-primary" lay-submit lay-filter="search">查找</button>
+          </div>
+        </div>
+        <div class="layui-row layui-col-space12"style="margin-top:10px;">
+          <div class="layui-col-md6" id="errortablediv"><div>发生错误情况</div></div>
+          <div class="layui-col-md6" id="wordstablediv"><div>用户搜索情况统计</div></div>
         </div>
       </div>
   </div>
@@ -63,6 +72,77 @@
 </style> -->
 <script>
   layui.use(['form','laydate','dropdown','table','laypage','laydate','util'], function(){
+    $ = layui.jquery 
+    var errortablediv = $('<table id="errortable" lay-filter="test1"></table>'); 
+    var wordstablediv = $('<table id="wordstable" lay-filter="test2"></table>'); 
+    $('#errortablediv').append(errortablediv)
+    $('#wordstablediv').append(wordstablediv)
+    var data = new Date();
+    var end = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate()) + ' 00:00:00';
+    end = Date.parse(end)/1000;
+    var start = end - 86400;
+    var startstr = new Date(start*1000)
+    startstr = String(startstr.getFullYear()) + '-' + String(startstr.getMonth()+1) + '-' +  String(startstr.getDate());
+    $("#selecttime").val(startstr)
+    // $("#timestart").val(start);
+    // $("#timeend").val(endstr);
+    // timeStamp = timeStamp/1000
+    // layer.msg(start);
+    // var url = '/log?method=time&start='+String(start)+'&end='+String(end);
+    var method = 'time';
+    var laypage = layui.laypage //分页
+	  var	errortable = layui.table //表格
+    var wordstable = layui.table
+    start = 0
+    end = 10000000000000000000
+    //第一个实例
+    errortable.render({
+      elem: '#errortable'
+      ,id: 'errortable'
+      ,height: 700
+      ,url: '/statistics?method=error&start='+start+'&end='+end //数据接口
+      ,page: true //开启分页
+      ,cols: [[ //表头
+        {field: 'id', title: 'ID', width:100, sort: true, fixed: 'left'}
+        ,{field: 'type', title: '请求类型', width:100} 
+        ,{field: 'create_time', width: 180, title: '错误时间', templet: "<div>\{\{layui.util.toDateString(d.create_time*1000)\}\}</div>"}
+        ,{field: 'error', title: '错误信息', width: 100}
+      ]]
+      ,page: true
+      ,limits: [10,20,50,100,500]
+      ,limit: 20
+    });
+    wordstable.render({
+      elem: '#wordstable'
+      ,id: 'wordstable'
+      ,height: 700
+      ,url: '/statistics?method=words&start='+start+'&end='+end //数据接口
+      ,page: true //开启分页
+      ,cols: [[ //表头
+        {field: 'words', title: '搜索词', width:100} 
+        ,{field: 'times', title: '搜索次数', width: 100}
+      ]]
+      ,page: true
+      ,limits: [10,20,50,100,500]
+      ,limit: 20
+    });
+    var laydate = layui.laydate;
+    laydate.render({     //创建时间选择框
+      elem: '#selecttime'//指定元素
+    });
+    var search = layui.form;
+    search.on('submit(search)', function (data) {
+      t = $("#selecttime").val()
+      start = Date.parse(t+' 0:0:0')/1000
+      end = start+86400
+      layer.msg(end)
+      errortable.reloadData('errortable', {
+        url:'/statistics?method=error&start='+String(start)+'&end='+String(end)
+      })
+      wordstable.reloadData('wordstable', {
+        url:'/statistics?method=words&start='+String(start)+'&end='+String(end)
+      })
+	  });
   });
 </script>
 <script>

@@ -230,7 +230,7 @@
           $("#wordsinput1").hide();
           $("#wordsinput2").hide();
         }
-        layer.msg(url);
+        // layer.msg(url);
       }
     });
     var search = layui.form;
@@ -259,7 +259,7 @@
           return
         }
         url = url+"&start=" + String(Date.parse(start)/1000) + '&end=' + String(Date.parse(end)/1000);
-        layer.msg(url)
+        // layer.msg(url)
         table.reloadData('logstable', {
           url:url
         })
@@ -274,7 +274,7 @@
           return
         }
         url = url+"&words=" + v
-        layer.msg(url)
+        // layer.msg(url)
         table.reloadData('logstable', {
           url:url
         })
