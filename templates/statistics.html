@@ -61,8 +61,12 @@
           </div>
         </div>
         <div class="layui-row layui-col-space12"style="margin-top:10px;">
-          <div class="layui-col-md6" id="errortablediv"><div>发生错误情况</div></div>
           <div class="layui-col-md4" id="wordstablediv"><div>用户搜索情况统计</div></div>
+          <div class="layui-col-md4" id="addresstablediv"><div>用户访问地理位置统计</div></div>
+          <div class="layui-col-md4" id="timetablediv"><div>用户搜索返回时间统计</div></div>
+        </div>
+        <div class="layui-row layui-col-space12"style="margin-top:10px;">
+          <div class="layui-col-md12" id="errortablediv"><div>发生错误情况</div></div>
         </div>
       </div>
   </div>
@@ -75,8 +79,12 @@
     $ = layui.jquery 
     var errortablediv = $('<table id="errortable" lay-filter="test1"></table>'); 
     var wordstablediv = $('<table id="wordstable" lay-filter="test2"></table>'); 
+    var addresstablediv = $('<table id="addresstable" lay-filter="test1"></table>'); 
+    var timetablediv = $('<table id="timetable" lay-filter="test2"></table>'); 
     $('#errortablediv').append(errortablediv)
     $('#wordstablediv').append(wordstablediv)
+    $('#addresstablediv').append(addresstablediv)
+    $('#timetablediv').append(timetablediv)
     var data = new Date();
     var end = String(data.getFullYear()) + '-' + String(data.getMonth()+1) + '-' +  String(data.getDate()) + ' 00:00:00';
     end = Date.parse(end)/1000;
@@ -93,8 +101,10 @@
     var laypage = layui.laypage //分页
 	  var	errortable = layui.table //表格
     var wordstable = layui.table
-    // start = 0
-    // end = 10000000000000000000
+    var addresstable = layui.table
+    var timetable = layui.table
+    start = 0
+    end = 10000000000000000000
     //第一个实例
     errortable.render({
       elem: '#errortable'
@@ -126,6 +136,34 @@
       ,limits: [10,20,50,100,500]
       ,limit: 20
     });
+    addresstable.render({
+      elem: '#addresstable'
+      ,id: 'addresstable'
+      ,height: 700
+      ,url: '/statistics?method=address&start='+start+'&end='+end //数据接口
+      ,page: true //开启分页
+      ,cols: [[ //表头
+        {field: 'times', title: '搜索次数', width: 120, sort: true, fixed: 'left'}
+        ,{field: 'words', title: '地理地址', width:100} 
+      ]]
+      ,page: true
+      ,limits: [10,20,50,100,500]
+      ,limit: 20
+    });
+    timetable.render({
+      elem: '#timetable'
+      ,id: 'timetable'
+      ,height: 700
+      ,url: '/statistics?method=time&start='+start+'&end='+end //数据接口
+      ,page: true //开启分页
+      ,cols: [[ //表头
+        {field: 'name', title: '搜索类型', width: 120}
+        ,{field: 'request_time', title: '平均耗时', width:100} 
+      ]]
+      ,page: true
+      ,limits: [10,20,50,100,500]
+      ,limit: 20
+    });
     var laydate = layui.laydate;
     laydate.render({     //创建时间选择框
       elem: '#selecttime'//指定元素
@@ -141,6 +179,12 @@
       })
       wordstable.reloadData('wordstable', {
         url:'/statistics?method=words&start='+String(start)+'&end='+String(end)
+      })
+      addresstable.reloadData('errortable', {
+        url:'/statistics?method=address&start='+String(start)+'&end='+String(end)
+      })
+      timetable.reloadData('wordstable', {
+        url:'/statistics?method=time&start='+String(start)+'&end='+String(end)
       })
 	  });
   });

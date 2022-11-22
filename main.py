@@ -174,7 +174,7 @@ class Main(object):
         elif method == "words":
             ren = Main.s.st_words(start,end)
         elif method == "time":
-            pass
+            ren = Main.s.st_time(start,end)
         elif method == "address":
             ren = Main.s.st_address(start,end)
         if page and limit and pd:

@@ -324,6 +324,32 @@ class Service(object):
             back.data.sort(key = lambda i:i['times'],reverse=True)
         ren = back.bejson(back)
         return ren
-
+    def st_time(self,start,end):
+        back = St_Mode()
+        logs = self.cld.get_by_time(start,end)
+        retimes={
+            'list':[],
+            'detail':[]
+        }
+        for log in logs:
+            if log.type=='list':
+                retimes['list'].append(log.request_time)
+            elif log.type=='details':
+                retimes['detail'].append(log.request_time)
+        retimes['list'] = sum(retimes['list'])/len(retimes['list']) if retimes['list']!=[] else 0
+        retimes['detail'] = sum(retimes['detail'])/len(retimes['detail']) if retimes['detail']!=[] else 0
+        retimes['list'] = str(int(retimes['list']))+'ms'
+        retimes['detail'] = str(int(retimes['detail']))+'ms'
+        back.data=[{
+                    'name':'list',
+                    'request_time':retimes['list']
+                },
+                {
+                    'name':'detail',
+                    'request_time':retimes['detail']
+                }]
+        ren = back.bejson(back)
+        return ren
+            
         
         
