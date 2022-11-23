@@ -201,18 +201,14 @@ class Service(object):
             ren = list.bejson(list)
             self.add_log(self.request_time(start),ren,method)
             return ren
-        if list.type!="yuanlue":
-            try:
+        try:
+            if list.type!="yuanlue":
                 if not self.exist_list(list):
                     self.add_company_list(list)
                 else:
                     self.update_company_list(list)
-            except:
-                exp = traceback.format_exc()
-                list.error = exp
-                ren = list.bejson(list)
-                self.add_log(self.request_time(start),ren,method)
-                return ren
+        except:
+            self.send_alarm('get_list','add sql error!')
         ren = list.bejson(list)
         self.add_log(self.request_time(start),ren,method)
         return ren
@@ -272,8 +268,8 @@ class Service(object):
         return ren
     def st_error(self,start,end):
         back = St_Mode()
-        logs = self.cld.st_error(start,end)
         try:
+            logs = self.cld.st_error(start,end)
             for log in logs:
                 back.data.append(self.cld.bejson2(log))         
         except:
@@ -284,8 +280,8 @@ class Service(object):
     def st_words(self,start,end):
         # http://www.inte.net/tool/ip/api.ashx?ip=183.136.213.98&datatype=json
         back = St_Mode()
-        logs = self.cld.st_words(start,end)
         try:
+            logs = self.cld.st_words(start,end)
             wdlist=[]
             for log in logs:
                 if log.words == '':
@@ -312,48 +308,56 @@ class Service(object):
         return result
     def st_address(self,start,end):
         back = St_Mode()
-        logs = self.cld.get_by_time(start,end)
-        address = []
-        for log in logs:
-            ip = log.ip
-            # ip = '110.41.14.33'
-            if ip == '127.0.0.1':
-                where = '本地访问'
-            elif ip == '':
-                where = '空ip'
-            else:
-                where = self.check_ip(ip)
-            address.append(where)
-        address = Counter(address)
-        for a in address:
-            back.data.append({'words':a,'times':address[a]})
-            back.data.sort(key = lambda i:i['times'],reverse=True)
+        try:
+            logs = self.cld.get_by_time(start,end)
+            address = []
+            for log in logs:
+                ip = log.ip
+                # ip = '110.41.14.33'
+                if ip == '127.0.0.1':
+                    where = '本地访问'
+                elif ip == '':
+                    where = '空ip'
+                else:
+                    where = self.check_ip(ip)
+                address.append(where)
+            address = Counter(address)
+            for a in address:
+                back.data.append({'words':a,'times':address[a]})
+                back.data.sort(key = lambda i:i['times'],reverse=True)
+        except:
+            exp = traceback.format_exc()
+            back.error = exp
         ren = back.bejson(back)
         return ren
     def st_time(self,start,end):
         back = St_Mode()
-        logs = self.cld.get_by_time(start,end)
-        retimes={
-            'list':[],
-            'detail':[]
-        }
-        for log in logs:
-            if log.type=='list':
-                retimes['list'].append(log.request_time)
-            elif log.type=='detail':
-                retimes['detail'].append(log.request_time)
-        retimes['list'] = sum(retimes['list'])/len(retimes['list']) if retimes['list']!=[] else 0
-        retimes['detail'] = sum(retimes['detail'])/len(retimes['detail']) if retimes['detail']!=[] else 0
-        retimes['list'] = str(int(retimes['list']))+'ms'
-        retimes['detail'] = str(int(retimes['detail']))+'ms'
-        back.data=[{
-                    'name':'list',
-                    'request_time':retimes['list']
-                },
-                {
-                    'name':'detail',
-                    'request_time':retimes['detail']
-                }]
+        try:
+            logs = self.cld.get_by_time(start,end)
+            retimes={
+                'list':[],
+                'detail':[]
+            }
+            for log in logs:
+                if log.type=='list':
+                    retimes['list'].append(log.request_time)
+                elif log.type=='detail':
+                    retimes['detail'].append(log.request_time)
+            retimes['list'] = sum(retimes['list'])/len(retimes['list']) if retimes['list']!=[] else 0
+            retimes['detail'] = sum(retimes['detail'])/len(retimes['detail']) if retimes['detail']!=[] else 0
+            retimes['list'] = str(int(retimes['list']))+'ms'
+            retimes['detail'] = str(int(retimes['detail']))+'ms'
+            back.data=[{
+                        'name':'list',
+                        'request_time':retimes['list']
+                    },
+                    {
+                        'name':'detail',
+                        'request_time':retimes['detail']
+                    }]
+        except:
+            exp = traceback.format_exc()
+            back.error = exp
         ren = back.bejson(back)
         return ren
             
