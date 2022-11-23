@@ -204,6 +204,6 @@ class Main(object):
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()
-
-    main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
+    main.api.run(port=9252,host='0.0.0.0') # 启动服务
+    # main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
     # ren = Main.s.get('detail','万达')

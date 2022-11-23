@@ -224,6 +224,7 @@ class Service(object):
             backlog.logs = [self.cld.bejson(log)]
         except:
             exp = traceback.format_exc()
+            self.send_alarm('get_log_byId',exp)
             backlog.error = exp
         ren = backlog.bejson(backlog)
         return ren
@@ -237,6 +238,7 @@ class Service(object):
             backlog.logs = back
         except:
             exp = traceback.format_exc()
+            self.send_alarm('get_log_byTime',exp)
             backlog.error = exp
         ren = backlog.bejson(backlog)
         return ren
@@ -250,6 +252,7 @@ class Service(object):
             backlog.logs = back
         except:
             exp = traceback.format_exc()
+            self.send_alarm('get_log_byWords',exp)
             backlog.error = exp
         ren = backlog.bejson(backlog)
         return ren
@@ -263,6 +266,7 @@ class Service(object):
             backlog.logs = back
         except:
             exp = traceback.format_exc()
+            self.send_alarm('get_logs',exp)
             backlog.error = exp
         ren = backlog.bejson(backlog)
         return ren
@@ -274,6 +278,7 @@ class Service(object):
                 back.data.append(self.cld.bejson2(log))         
         except:
             exp = traceback.format_exc()
+            self.send_alarm('st_error',exp)
             back.error = exp
         ren = back.bejson(back)
         return ren
@@ -293,6 +298,7 @@ class Service(object):
                 back.data.sort(key = lambda i:i['times'],reverse=True)
         except:
             exp = traceback.format_exc()
+            self.send_alarm('st_words',exp)
             back.error = exp
         ren = back.bejson(back)
         return ren
@@ -317,7 +323,7 @@ class Service(object):
                 if ip == '127.0.0.1':
                     where = '本地访问'
                 elif ip == '':
-                    where = '空ip'
+                    continue
                 else:
                     where = self.check_ip(ip)
                 address.append(where)
@@ -327,6 +333,7 @@ class Service(object):
                 back.data.sort(key = lambda i:i['times'],reverse=True)
         except:
             exp = traceback.format_exc()
+            self.send_alarm('st_address',exp)
             back.error = exp
         ren = back.bejson(back)
         return ren
@@ -357,6 +364,7 @@ class Service(object):
                     }]
         except:
             exp = traceback.format_exc()
+            self.send_alarm('st_time',exp)
             back.error = exp
         ren = back.bejson(back)
         return ren
