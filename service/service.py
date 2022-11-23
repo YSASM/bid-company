@@ -319,6 +319,8 @@ class Service(object):
             # ip = '110.41.14.33'
             if ip == '127.0.0.1':
                 where = '本地访问'
+            elif ip == '':
+                where = '空ip'
             else:
                 where = self.check_ip(ip)
             address.append(where)
