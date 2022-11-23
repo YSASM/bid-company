@@ -301,7 +301,11 @@ class Service(object):
         ren = back.bejson(back)
         return ren
     def check_ip(self,argv):
-        result = self.q.lookup(argv)
+        try:
+            result = self.q.lookup(argv)
+        except:
+            self.send_alarm('st_address','ip match error.\nip:'+argv)
+            return '其他'
         if not result:
             return '其他'
         result,x=result
