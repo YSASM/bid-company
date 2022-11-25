@@ -3,7 +3,7 @@ from api.mode import ListData
 class YuanlueList(object):
     def __init__(self):
         self.cd = CompanyDao()
-    def run(self,words,list):
+    def run(self,words,list_):
         company = self.cd.get_by_id(words)
         data = ListData()
         data.name = company.name
@@ -27,5 +27,5 @@ class YuanlueList(object):
         data.web = company.web
         data.address = company.address
         data.company_range = company.company_range
-        list.data = data.bejson(data)
-        return list
+        list_.data = data.bejson(data)
+        return list_

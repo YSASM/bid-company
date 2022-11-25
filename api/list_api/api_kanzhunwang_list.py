@@ -38,15 +38,15 @@ class KanzhunwangList(object):
         html = BeautifulSoup(response.text, 'html.parser')
         return 1,html
         
-    def run(self,words,list):
+    def run(self,words,list_):
         code,res = self.info(words)
         if code == 0:
-            list.error = res
-            return list
+            list_.error = res
+            return list_
         code,html = self.html(words)
         if code == 0:
-            list.error = res
-            return list
+            list_.error = res
+            return list_
         try:
             res = json.loads(res)
             res = res['resdata']
@@ -60,7 +60,7 @@ class KanzhunwangList(object):
             else:
                 data.name = html.find('h1',class_='base-title').text
         except:
-            list.error = '获取公司名失败'
+            list_.error = '获取公司名失败'
         try:
             cons = html.find('div',class_='text-wrap').find_all('p')
             phone = []
@@ -146,7 +146,7 @@ class KanzhunwangList(object):
         except:
             pass
         try:
-            list.data = data.bejson(data)
+            list_.data = data.bejson(data)
         except:
             pass
-        return list
+        return list_

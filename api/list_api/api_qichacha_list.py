@@ -16,7 +16,7 @@ class QichachaList(object):
             'cookie': f'QCCSESSID={QCCSESSID};',
             'referer': 'https://www.qcc.com/',
         }
-    def run(self,words,list):
+    def run(self,words,list_):
         url = 'https://www.qcc.com/firm/%s.html' % words
         code,response = HttpWrapper.get(url, headers=self.headers)
         if code!='ok':
@@ -102,6 +102,6 @@ class QichachaList(object):
         try :
             data.company_range = temp[9][1].text.replace(' ','')
         except:pass
-        list.data = data.bejson(data)
-        return list
+        list_.data = data.bejson(data)
+        return list_
         
