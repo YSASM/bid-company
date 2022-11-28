@@ -7,7 +7,7 @@ from api.mode import Detail,DetailData
 
 # 输入关键词，获取下拉菜单
 QCCSESSID = "1b2a5699837aab626f5804fc42"
-class QichachaDetail(object):
+class api_qichacha_detail(object):
     def get_tid(self):
         headers = {
             'cookie': f'QCCSESSID={QCCSESSID};',

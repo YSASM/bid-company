@@ -47,6 +47,9 @@ class Main(object):
         if token:
             for lt in logintoken:
                 if token == lt[0]:
+                    if t-lt[1]>86400:
+                        logintoken.pop(lt)
+                        return False
                     lt[1] = t
                     return token
             return False
@@ -57,6 +60,9 @@ class Main(object):
         token = hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
         for lt in logintoken:
             if token == lt[0]:
+                if t-lt[1]>86400:
+                    logintoken.pop(lt)
+                    return False
                 lt[1] = t
                 return token
         if Main.ad.login(username,password):
@@ -84,7 +90,7 @@ class Main(object):
         token = request.headers.get('token')
         token = Main().isLogin(ip,time(),token=token)
         if token:
-            res = make_response(redirect(url_for('managestatistics')))
+            res = make_response(redirect(url_for('manageonoff')))
             res.headers['token'] = token
             return res
         return redirect(url_for('login'))
@@ -100,7 +106,7 @@ class Main(object):
             return res
         return redirect(url_for('login'))
 
-    @api.route('/managelog',methods=['get'],) 
+    @api.route('/managelog',methods=['get']) 
     def managelog():
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token = request.headers.get('token')
@@ -110,7 +116,23 @@ class Main(object):
             res.headers['token'] = token
             return res
         return redirect(url_for('login'))
-        
+    
+    @api.route('/manageonoff',methods=['get']) 
+    def manageonoff():
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        token = request.headers.get('token')
+        token = Main().isLogin(ip,time(),token=token)
+        if token:
+            res = make_response(render_template('onoff.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
+            res.headers['token'] = token
+            return res
+        return redirect(url_for('login'))
+    @api.route('/base/on_off.json',methods=['get']) 
+    def on_off_json():
+        f = open('base/on_off.json','r')
+        back = json.load(f)
+        f.close()
+        return jsonify(back)
     @api.route('/list',methods=['get'])
     def list():
         start = int(float(time())*1000)
@@ -157,6 +179,14 @@ class Main(object):
         except IndexError:
             ren['data']=[]
         return ren
+    # /restatus
+    @api.route('/restatus',methods=['get'])
+    def restatus():
+        name = request.args.get('name')
+        status = request.args.get('status')
+        ren = Main.s.restatus(name,status)
+        return ren
+        
     @api.route('/statistics',methods=['get'])
     def statistics():
         start = request.args.get('start')
@@ -204,6 +234,6 @@ class Main(object):
         return jsonify(ren)
 if __name__ == '__main__':
     main = Main()
-    main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    # main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
+    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
+    main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
     # ren = Main.s.get('detail','万达')

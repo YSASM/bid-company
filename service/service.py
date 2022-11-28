@@ -1,3 +1,4 @@
+import json
 from base.get_md5 import get_md5
 from collections import Counter
 from model.bid_company import Company, CompanyDao
@@ -14,6 +15,7 @@ from qqwry import QQwry
 
 class Service(object):
     def __init__(self):
+        # self.reload_detail()
         self.detail = detail_api.get_list()
         self.list = list_api.get_list()
         self.cs = CompanyService()
@@ -141,6 +143,8 @@ class Service(object):
             return ren
         detail.words = words
         for i in self.detail:
+            if i[2] == "2":
+                continue
             detail.error = ""
             detail.type = i[0]
             self.d = i[1]()
@@ -368,6 +372,23 @@ class Service(object):
             back.error = exp
         ren = back.bejson(back)
         return ren
-            
-        
+    def reload_d(self):
+        self.detail = detail_api.get_list()
+    def restatus(self,name,status):
+        try:
+            f = open('base/on_off.json','r')
+            old = json.load(f)
+            for i in old['data']:
+                if i['name']==name:
+                    old['data'].pop(old['data'].index(i))
+                    i['status']=status
+                    old['data'].append(i)
+            f.close()
+            f = open('base/on_off.json','w')
+            f.write(json.dumps(old))
+            f.close()
+            self.reload_d()
+            return "操作成功",200
+        except Exception as e:
+            return str(e),500
         

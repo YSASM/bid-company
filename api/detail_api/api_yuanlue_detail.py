@@ -1,7 +1,7 @@
 from api.mode import DetailData
 from base.get_md5 import get_md5
 from service.company import CompanyService
-class YuanlueDetail(object):
+class api_yuanlue_detail(object):
     def __init__(self):
         self.cs = CompanyService()
     def run(self,words,detail):

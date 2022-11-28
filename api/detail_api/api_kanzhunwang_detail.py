@@ -2,7 +2,7 @@ import traceback
 from base.http_wrapper import HttpWrapper
 from api.mode import DetailData,Detail
 import json
-class KanzhunwangDetail(object):
+class api_kanzhunwang_detail(object):
     def get_list(self,key):
         headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
