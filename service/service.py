@@ -380,9 +380,8 @@ class Service(object):
             old = json.load(f)
             for i in old['data']:
                 if i['name']==name:
-                    old['data'].pop(old['data'].index(i))
-                    i['status']=status
-                    old['data'].append(i)
+                    old['data'][old['data'].index(i)]['status']=status
+                    break
             f.close()
             f = open('base/on_off.json','w')
             f.write(json.dumps(old))
