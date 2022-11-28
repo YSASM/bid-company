@@ -20,6 +20,6 @@ def get_list():
                 list_[list_.index(i)][2] = "2"
                 break
             else:
-                list_[list_.index(i)]{2} = "1"
+                list_[list_.index(i)][2] = "1"
                 break
     return list_
