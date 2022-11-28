@@ -20,19 +20,15 @@ class QichachaList(object):
         url = 'https://www.qcc.com/firm/%s.html' % words
         code,response = HttpWrapper.get(url, headers=self.headers)
         if code!='ok':
-            return json.dumps({'name':'网络错误'})
+            list_.error = response
+            return list_
         html = BeautifulSoup(response.text.replace('\n',''), 'html.parser')
         try:
             trs = html.find('div',class_='cominfo-normal').find_all('tr')
         except:
-            if '公司不存在' in response.text:
-                return json.dumps({'type':'qichacha','name':'公司不存在'})
-            elif'登陆' in response.text:
-                return json.dumps({'type':'qichacha','name':'需要登陆'})
-            elif'验证码' in response.text:
-                return json.dumps({'type':'qichacha','name':'需要验证码'})
-            else:
-                return json.dumps({'type':'qichacha','name':'未知错误:'+traceback.format_exc()})
+            exp = traceback.format_exc()
+            list_.error = exp
+            return list_
         temp = []
         for tr in trs:
             td = tr.find_all('td')
