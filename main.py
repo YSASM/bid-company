@@ -48,7 +48,7 @@ class Main(object):
             for lt in logintoken:
                 if token == lt[0]:
                     if t-lt[1]>86400:
-                        logintoken.pop(lt)
+                        logintoken.pop(logintoken.index(lt))
                         return False
                     lt[1] = t
                     return token
@@ -61,7 +61,7 @@ class Main(object):
         for lt in logintoken:
             if token == lt[0]:
                 if t-lt[1]>86400:
-                    logintoken.pop(lt)
+                    logintoken.pop(logintoken.index(lt))
                     return False
                 lt[1] = t
                 return token
