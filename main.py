@@ -32,9 +32,6 @@ else:
 console_handler.setFormatter(logging.Formatter(fmt))
 logger.addHandler(console_handler)
 class Main(object):
-    def __init__(self):
-        # print(Config.get())
-        pass
     ad = AdminDao()
     s = service.Service()
     api = Flask(__name__) 
@@ -44,6 +41,17 @@ class Main(object):
     CORS(api, supports_credentials=True, resources=r"/*")
     def make_token(self,username,password,ip):
         return hashlib.md5(username.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
+    def decode_base64(self,data):
+        '''
+        Decode base64, padding being optional.
+        :param data: Base64 data as an ASCII byte string
+        :returns: The decoded byte string.
+        '''
+        data = data.encode("utf-8")
+        missing_padding = 4 - len(data) % 4
+        if missing_padding:
+            data += b'=' * missing_padding
+        return base64.decodestring(data)
     def isLogin(self,ip,t,token=None):
         global logintoken
         username = session.get('username')
@@ -83,13 +91,10 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token = request.cookies.get('session')
         if token:
-            try:
-                token = token.split('.')
-                token = base64.b64decode(token[0])
-                token = json.loads(token)
-                token = Main().make_token(token['username'],token['password'],ip)
-            except:
-                token = None
+            token = token.split('.')
+            token = Main().decode_base64(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(redirect(url_for('manageonoff')))
@@ -101,13 +106,10 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token =request.cookies.get('session')
         if token:
-            try:
-                token = token.split('.')
-                token = base64.b64decode(token[0])
-                token = json.loads(token)
-                token = Main().make_token(token['username'],token['password'],ip)
-            except:
-                token = None
+            token = token.split('.')
+            token = Main().decode_base64(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('statistics.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
@@ -119,13 +121,10 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token =request.cookies.get('session')
         if token:
-            try:
-                token = token.split('.')
-                token = base64.b64decode(token[0])
-                token = json.loads(token)
-                token = Main().make_token(token['username'],token['password'],ip)
-            except:
-                token = None
+            token = token.split('.')
+            token = Main().decode_base64(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('log.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
@@ -137,13 +136,10 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token =request.cookies.get('session')
         if token:
-            try:
-                token = token.split('.')
-                token = base64.b64decode(token[0])
-                token = json.loads(token)
-                token = Main().make_token(token['username'],token['password'],ip)
-            except:
-                token = None
+            token = token.split('.')
+            token = Main().decode_base64(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('onoff.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
