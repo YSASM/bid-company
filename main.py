@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # encoding:utf-8
-import json,logging,hashlib,os,datetime
+import json,logging,hashlib,os,datetime,base64
 from logging import handlers
 from time import time
 import traceback
@@ -42,8 +42,12 @@ class Main(object):
     # session.permanent=True
     api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
     CORS(api, supports_credentials=True, resources=r"/*")
+    def make_token(self,username,password,ip):
+        return hashlib.md5(username.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
     def isLogin(self,ip,t,token=None):
         global logintoken
+        username = session.get('username')
+        password = session.get('password')
         if token:
             for lt in logintoken:
                 if token == lt[0]:
@@ -52,19 +56,9 @@ class Main(object):
                         return False
                     lt[1] = t
                     return token
-            return False
-        username = session.get('username')
-        password = session.get('password')
         if not username or not password:
             return False
-        token = hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
-        for lt in logintoken:
-            if token == lt[0]:
-                if t-lt[1]>86400:
-                    logintoken.pop(logintoken.index(lt))
-                    return False
-                lt[1] = t
-                return token
+        token = self.make_token(username,password,ip)
         if Main.ad.login(username,password):
             logintoken.append([token,t])
             return token
@@ -87,44 +81,60 @@ class Main(object):
     @api.route('/manage',methods=['get'])
     def manage():
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        token = request.headers.get('token')
+        token = request.cookies.get('session')
+        if token:
+            token = token.split('.')
+            token = base64.b64decode(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(redirect(url_for('manageonoff')))
-            res.headers['token'] = token
             return res
         return redirect(url_for('login'))
     
     @api.route('/managestatistics',methods=['get']) 
     def managestatistics():
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        token = request.headers.get('token')
+        token =request.cookies.get('session')
+        if token:
+            token = token.split('.')
+            token = base64.b64decode(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('statistics.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
-            res.headers['token'] = token
             return res
         return redirect(url_for('login'))
 
     @api.route('/managelog',methods=['get']) 
     def managelog():
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        token = request.headers.get('token')
+        token =request.cookies.get('session')
+        if token:
+            token = token.split('.')
+            token = base64.b64decode(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('log.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
-            res.headers['token'] = token
             return res
         return redirect(url_for('login'))
     
     @api.route('/manageonoff',methods=['get']) 
     def manageonoff():
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        token = request.headers.get('token')
+        token =request.cookies.get('session')
+        if token:
+            token = token.split('.')
+            token = base64.b64decode(token[0])
+            token = json.loads(token)
+            token = Main().make_token(token['username'],token['password'],ip)
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('onoff.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
-            res.headers['token'] = token
             return res
         return redirect(url_for('login'))
     @api.route('/base/on_off.json',methods=['get']) 
