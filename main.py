@@ -85,7 +85,6 @@ class Main(object):
         if token:
             try:
                 token = token.split('.')
-                return token[0]
                 token = base64.b64decode(token[0])
                 token = json.loads(token)
                 token = Main().make_token(token['username'],token['password'],ip)
