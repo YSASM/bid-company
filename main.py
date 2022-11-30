@@ -42,16 +42,11 @@ class Main(object):
     def make_token(self,username,password,ip):
         return hashlib.md5(username.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
     def decode_base64(self,data):
-        '''
-        Decode base64, padding being optional.
-        :param data: Base64 data as an ASCII byte string
-        :returns: The decoded byte string.
-        '''
         data = data.encode("utf-8")
         missing_padding = 4 - len(data) % 4
         if missing_padding:
             data += b'=' * missing_padding
-        return base64.decodestring(data)
+        return base64.decodebytes(data)
     def isLogin(self,ip,t,token=None):
         global logintoken
         username = session.get('username')
