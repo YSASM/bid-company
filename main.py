@@ -83,10 +83,14 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token = request.cookies.get('session')
         if token:
-            token = token.split('.')
-            token = base64.b64decode(token[0])
-            token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
+            try:
+                token = token.split('.')
+                return token[0]
+                token = base64.b64decode(token[0])
+                token = json.loads(token)
+                token = Main().make_token(token['username'],token['password'],ip)
+            except:
+                token = None
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(redirect(url_for('manageonoff')))
@@ -98,10 +102,13 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token =request.cookies.get('session')
         if token:
-            token = token.split('.')
-            token = base64.b64decode(token[0])
-            token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
+            try:
+                token = token.split('.')
+                token = base64.b64decode(token[0])
+                token = json.loads(token)
+                token = Main().make_token(token['username'],token['password'],ip)
+            except:
+                token = None
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('statistics.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
@@ -113,10 +120,13 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token =request.cookies.get('session')
         if token:
-            token = token.split('.')
-            token = base64.b64decode(token[0])
-            token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
+            try:
+                token = token.split('.')
+                token = base64.b64decode(token[0])
+                token = json.loads(token)
+                token = Main().make_token(token['username'],token['password'],ip)
+            except:
+                token = None
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('log.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
@@ -128,10 +138,13 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         token =request.cookies.get('session')
         if token:
-            token = token.split('.')
-            token = base64.b64decode(token[0])
-            token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
+            try:
+                token = token.split('.')
+                token = base64.b64decode(token[0])
+                token = json.loads(token)
+                token = Main().make_token(token['username'],token['password'],ip)
+            except:
+                token = None
         token = Main().isLogin(ip,time(),token=token)
         if token:
             res = make_response(render_template('onoff.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
