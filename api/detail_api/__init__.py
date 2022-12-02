@@ -3,6 +3,9 @@ def read_json():
     on_off = open('base/on_off.json','r')
     on_off = json.load(on_off)['data']
     return on_off
+def yuanlue():
+    from api.detail_api.api_yuanlue_detail import api_yuanlue_detail
+    return api_yuanlue_detail
 def get_list():
     list_=[]
     from api.detail_api.api_kanzhunwang_detail import api_kanzhunwang_detail

@@ -1,4 +1,6 @@
 import json
+
+import requests
 from base.get_md5 import get_md5
 from collections import Counter
 from model.bid_company import Company, CompanyDao
@@ -23,6 +25,7 @@ class Service(object):
         self.cld = CompanyLogDao()
         self.add = self.cld.add
         self.q = QQwry()
+        self.yuanlue_detail = detail_api.yuanlue().run
         self.q.load_file('base/qqwry.dat')
 
     def send_alarm(self, title, exp, receiver="wujiefeng"):
@@ -390,4 +393,22 @@ class Service(object):
             return "操作成功",200
         except Exception as e:
             return str(e),500
-        
+    def get_yuanlue_api_company_id(self,words):
+        detail = Detail()
+        detail = self.yuanlue_detail(self,words,detail)
+        data = detail.data
+        if data == []:
+            return False
+        return data[0]
+    def get_id(self,words):
+        data = self.get_yuanlue_api_company_id(words)
+        if not data:
+            detail = requests.get(url='http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/details?words=%s' % words)
+            detail = json.loads(detail.text)
+            # logging.info(str(detail))
+            for d in detail['data']:
+                list = requests.get(url='http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/list?words=%s&type=%s' % (d['keyNo'],detail['type']))
+        data = self.get_yuanlue_api_company_id(words)
+        if not data:
+            return {"keyNo":None,"logo":"","name":words}
+        return data

@@ -245,8 +245,14 @@ class Main(object):
         if page and limit and pd:
             ren = Main.pagedown(ren,page,limit)
         return jsonify(ren)
+    @api.route('/getid',methods=['get'])
+    def getid():
+        words = request.args.get('words')
+        data = Main.s.get_id(words)
+        return jsonify(data)
+
 if __name__ == '__main__':
     main = Main()
-    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
+    main.api.run(port=9252,host='0.0.0.0') # 启动服务
+    # main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
     # ren = Main.s.get('detail','万达')
