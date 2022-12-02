@@ -247,8 +247,9 @@ class Main(object):
         return jsonify(ren)
     @api.route('/getid',methods=['get'])
     def getid():
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         words = request.args.get('words')
-        data = Main.s.get_id(words)
+        data = Main.s.get_id(words,ip)
         return jsonify(data)
 
 if __name__ == '__main__':

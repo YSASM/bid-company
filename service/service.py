@@ -1,6 +1,6 @@
 import json
 
-import requests
+import requests,socket
 from base.get_md5 import get_md5
 from collections import Counter
 from model.bid_company import Company, CompanyDao
@@ -25,7 +25,6 @@ class Service(object):
         self.cld = CompanyLogDao()
         self.add = self.cld.add
         self.q = QQwry()
-        self.yuanlue_detail = detail_api.yuanlue().run
         self.q.load_file('base/qqwry.dat')
 
     def send_alarm(self, title, exp, receiver="wujiefeng"):
@@ -394,21 +393,26 @@ class Service(object):
         except Exception as e:
             return str(e),500
     def get_yuanlue_api_company_id(self,words):
+        yuanlue_detail = detail_api.yuanlue()
         detail = Detail()
-        detail = self.yuanlue_detail(self,words,detail)
+        detail = yuanlue_detail.run(self,words,detail)
         data = detail.data
         if data == []:
             return False
         return data[0]
-    def get_id(self,words):
+    def get_id(self,words,ip):
         data = self.get_yuanlue_api_company_id(words)
+        # if method == 'detail':
+        #     return self.get_detail(method,start,words,ip)
+        # elif method == 'list':
+        #     return self.get_list(method,start,words,ip,type)
         if not data:
-            detail = requests.get(url='http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/details?words=%s' % words)
-            detail = json.loads(detail.text)
+            start = int(float(time.time())*1000)
+            detail = self.get_detail('detail',start,words,ip)
             # logging.info(str(detail))
             if detail['data']:
                 d = detail['data'][0]
-                list = requests.get(url='http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/list?words=%s&type=%s' % (d['keyNo'],detail['type']))
+                self.get_list('list',start,d['keyNo'],ip,detail['type'])
                 data = self.get_yuanlue_api_company_id(words)
             else:
                 data = None
