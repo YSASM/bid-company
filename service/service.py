@@ -393,7 +393,7 @@ class Service(object):
         except Exception as e:
             return str(e),500
     def get_yuanlue_api_company_id(self,words):
-        yuanlue_detail = detail_api.yuanlue()
+        yuanlue_detail = detail_api.yuanlue()()
         detail = Detail()
         detail = yuanlue_detail.run(self,words,detail)
         data = detail.data
