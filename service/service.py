@@ -406,9 +406,12 @@ class Service(object):
             detail = requests.get(url='http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/details?words=%s' % words)
             detail = json.loads(detail.text)
             # logging.info(str(detail))
-            for d in detail['data']:
+            if detail['data']:
+                d = detail['data'][0]
                 list = requests.get(url='http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/list?words=%s&type=%s' % (d['keyNo'],detail['type']))
-        data = self.get_yuanlue_api_company_id(words)
-        if not data:
-            return {"keyNo":None,"logo":"","name":words}
+                data = self.get_yuanlue_api_company_id(words)
+            else:
+                data = None
+            if not data:
+                return {"keyNo":None,"logo":"","name":words}
         return data
