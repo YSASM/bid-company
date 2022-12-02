@@ -395,7 +395,7 @@ class Service(object):
     def get_yuanlue_api_company_id(self,words):
         yuanlue_detail = detail_api.yuanlue()()
         detail = Detail()
-        detail = yuanlue_detail.run(self,words,detail)
+        detail = yuanlue_detail.run(words,detail)
         data = detail.data
         if data == []:
             return {"keyNo":None,"logo":"","name":words}
