@@ -398,24 +398,18 @@ class Service(object):
         detail = yuanlue_detail.run(self,words,detail)
         data = detail.data
         if data == []:
-            return False
+            return {"keyNo":None,"logo":"","name":words}
         return data[0]
     def get_id(self,words,ip):
         data = self.get_yuanlue_api_company_id(words)
-        # if method == 'detail':
-        #     return self.get_detail(method,start,words,ip)
-        # elif method == 'list':
-        #     return self.get_list(method,start,words,ip,type)
-        if not data:
+        if data["keyNo"]:
+            return data
+        start = int(float(time.time())*1000)
+        detail = self.get_detail('detail',start,words,ip)
+        # logging.info(str(detail))
+        if detail['data']:
+            d = detail['data'][0]
             start = int(float(time.time())*1000)
-            detail = self.get_detail('detail',start,words,ip)
-            # logging.info(str(detail))
-            if detail['data']:
-                d = detail['data'][0]
-                self.get_list('list',start,d['keyNo'],ip,detail['type'])
-                data = self.get_yuanlue_api_company_id(words)
-            else:
-                data = None
-            if not data:
-                return {"keyNo":None,"logo":"","name":words}
+            self.get_list('list',start,d['keyNo'],ip,detail['type'])
+        data = self.get_yuanlue_api_company_id(words)
         return data
