@@ -164,15 +164,15 @@ class Main(object):
     @api.route('/details',methods=['get'])
     def details():
         start = int(float(time())*1000)
-        if page:
-            page = int(page)
-        limit = request.args.get('limit')
-        if limit:
-            limit = int(limit)
         try:
             words = request.args.get('words')
             page = request.args.get('page')
             limit = request.args.get('limit')
+            if page:
+                page = int(page)
+            limit = request.args.get('limit')
+            if limit:
+                limit = int(limit)
             ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
             ren = Main.s.get('detail',words,ip,start)
         except:
