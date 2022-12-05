@@ -11,9 +11,10 @@ import traceback
 from config.config import Config
 from service.message import MessageService
 from api import detail_api,list_api
-from api.mode import Detail,List,Log,St_Mode
+from api.mode import Detail,List,Log,St_Mode,Xingtu
 from model.bid_company_log import CompanyLog,CompanyLogDao
 from qqwry import QQwry
+from service.xingtu import GetXingtuInfo
 
 class Service(object):
     def __init__(self):
@@ -413,3 +414,14 @@ class Service(object):
             self.get_list('list',start,d['keyNo'],ip,detail['type'])
         data = self.get_yuanlue_api_company_id(words)
         return data
+    def get_xingtu(self,words,ip):
+        xingtu = Xingtu()
+        get_xt = GetXingtuInfo()
+        try:
+            xingtu.ip = ip
+            xingtu = get_xt.get(words,xingtu)
+            xingtu = xingtu.bejson(xingtu)
+        except:
+            exp = traceback.format_exc()
+            xingtu.error = exp
+        return xingtu

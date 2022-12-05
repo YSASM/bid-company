@@ -128,3 +128,21 @@ class St_Mode(object):
             "error" : data.error,#发生错误
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
         }
+class Xingtu(object):
+    def __init__(self):
+        self.code = 0
+        self.data = []
+        self.ip = ""
+        self.msg = ""
+        self.error = ""
+        self.words = ""
+
+    def bejson(self,data):
+        return {
+            "code": 0 if data.error=="" else 1,#返回状态码
+            "words":data.words,#搜索词
+            "data": data.data,
+            "error" : data.error,#发生错误
+            "ip": data.ip,#请求IP
+            "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
+        }

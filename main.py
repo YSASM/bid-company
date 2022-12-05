@@ -251,6 +251,12 @@ class Main(object):
         words = request.args.get('words')
         data = Main.s.get_id(words,ip)
         return jsonify(data)
+    @api.route('/xingtu',methods=['get'])
+    def getxingtu():
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        words = request.args.get('words')
+        data = Main.s.get_xingtu(words,ip)
+        return jsonify(data)
 
 if __name__ == '__main__':
     main = Main()
