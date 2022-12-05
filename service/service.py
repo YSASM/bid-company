@@ -15,11 +15,7 @@ from api.mode import Detail,List,Log,St_Mode,Xingtu
 from model.bid_company_log import CompanyLog,CompanyLogDao
 from qqwry import QQwry
 from service.xingtu import GetXingtuInfo
-from threading import Thread
-def async_call(fn):
-    def wrapper(*args, **kwargs):
-        Thread(target=fn, args=args, kwargs=kwargs).start()
-    return wrapper
+from base.ansync_call import async_call
 class Service(object):
     def __init__(self):
         # self.reload_detail()
@@ -422,7 +418,6 @@ class Service(object):
             d = detail['data'][0]
             start = int(float(time.time())*1000)
             self.get_list('list',start,d['keyNo'],ip,detail['type'])
-        data = self.get_yuanlue_api_company_id(words)
         return data
     def get_xingtu(self,words,ip):
         xingtu = Xingtu()
