@@ -142,7 +142,7 @@ class Service(object):
         if not words:
             detail.error = "words参数错误"
             ren = detail.bejson(detail)
-            self.add_log(self.request_time(start),ren,method)
+            # self.add_log(self.request_time(start),ren,method)
             return ren
         detail.words = words
         for i in self.detail:
@@ -157,21 +157,21 @@ class Service(object):
                 exp = traceback.format_exc()
                 detail.error = exp
                 ren = detail.bejson(detail)
-                self.add_log(self.request_time(start),ren,method)
+                # self.add_log(self.request_time(start),ren,method)
                 continue
             if len(detail.data) == 0:
                 continue
-            if detail.type!="yuanlue":
-                try:
-                    self.add_company_detail(detail)
-                except:
-                    exp = traceback.format_exc()
-                    detail.error = exp
-                    ren = detail.bejson(detail)
-                    self.add_log(self.request_time(start),ren,method)
-                    return ren
+            # if detail.type!="yuanlue":
+            #     try:
+            #         self.add_company_detail(detail)
+            #     except:
+            #         exp = traceback.format_exc()
+            #         detail.error = exp
+            #         ren = detail.bejson(detail)
+            #         self.add_log(self.request_time(start),ren,method)
+            #         return ren
             ren = detail.bejson(detail)
-            self.add_log(self.request_time(start),ren,method)
+            # self.add_log(self.request_time(start),ren,method)
             return ren
         detail.error = "无结果"
         ren = detail.bejson(detail)
