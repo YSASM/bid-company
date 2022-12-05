@@ -418,6 +418,9 @@ class Service(object):
             d = detail['data'][0]
             start = int(float(time.time())*1000)
             self.get_list('list',start,d['keyNo'],ip,detail['type'])
+        while not data["keyNo"]:
+            data = self.get_yuanlue_api_company_id(words)
+            time.sleep(1)
         return data
     def get_xingtu(self,words,ip):
         xingtu = Xingtu()
