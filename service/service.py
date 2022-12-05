@@ -15,7 +15,11 @@ from api.mode import Detail,List,Log,St_Mode,Xingtu
 from model.bid_company_log import CompanyLog,CompanyLogDao
 from qqwry import QQwry
 from service.xingtu import GetXingtuInfo
-
+from threading import Thread
+def async_call(fn):
+    def wrapper(*args, **kwargs):
+        Thread(target=fn, args=args, kwargs=kwargs).start()
+    return wrapper
 class Service(object):
     def __init__(self):
         # self.reload_detail()
@@ -34,6 +38,7 @@ class Service(object):
         message.append("时间：%s" % time.strftime("%Y-%m-%d %H:%M:%S"))
         message.append(exp)
         MessageService.send_text("\n".join(message), receiver)
+    @async_call
     def add_log(self,request_time,ren,method):
         cy_log = CompanyLog()
         if ren['error'] !="":
@@ -62,8 +67,10 @@ class Service(object):
     def get_company(self,md5):
         company = self.cd.get_by_md5(md5)
         return company
+    @async_call
     def set_company(self,company):
         self.cd.update(company)
+    @async_call
     def add_company_detail(self,detail):
         for item in detail.data:
             if self.exist_detail(item):
@@ -75,10 +82,12 @@ class Service(object):
             company.create_time=int(time.time())
             company.name_md5 = get_md5(item['name'])
             self.cd.add(company)
+    @async_call
     def update_company_detail(self,item):
         xm_company = self.get_company(get_md5(item['name']))
         xm_company.logo = item['logo']
         self.set_company(xm_company)
+    @async_call
     def update_company_list(self,list):
         xm_company = self.get_company(get_md5(list.data['name']))
         xm_company.registration_status = list.data['registration_status']
@@ -102,6 +111,7 @@ class Service(object):
         xm_company.address=list.data['address']
         xm_company.company_range=list.data['company_range']
         self.set_company(xm_company)
+    @async_call
     def add_company_list(self,list):
         company = Company()
         # company.logo = list.data['logo']
@@ -142,8 +152,8 @@ class Service(object):
         if not words:
             detail.error = "words参数错误"
             ren = detail.bejson(detail)
-            yield ren
             self.add_log(self.request_time(start),ren,method)
+            return ren
         detail.words = words
         for i in self.detail:
             if i[2] == "2":
@@ -161,9 +171,6 @@ class Service(object):
                 continue
             if len(detail.data) == 0:
                 continue
-            ren = detail.bejson(detail)
-            yield ren
-            self.add_log(self.request_time(start),ren,method)
             if detail.type!="yuanlue":
                 try:
                     self.add_company_detail(detail)
@@ -171,13 +178,14 @@ class Service(object):
                     exp = traceback.format_exc()
                     detail.error = exp
                     ren = detail.bejson(detail)
-                    yield ren
                     self.add_log(self.request_time(start),ren,method)
-                    return
+                    return ren
+            ren = detail.bejson(detail)
+            self.add_log(self.request_time(start),ren,method)
+            return ren
         detail.error = "无结果"
         ren = detail.bejson(detail)
-        yield ren
-        self.add_log(self.request_time(start),ren,method)
+        return ren
     #详情页查询
     def get_list(self,method,start,words,ip,type):
         list = List()
@@ -223,10 +231,7 @@ class Service(object):
         return ren
     def get(self,method,words,ip,start,type=''):
         if method == 'detail':
-            ren = self.get_detail(method,start,words,ip)
-            for i in ren:
-                if i :
-                    return i
+            return self.get_detail(method,start,words,ip)
         elif method == 'list':
             return self.get_list(method,start,words,ip,type)
     def get_log_byId(self,id):
