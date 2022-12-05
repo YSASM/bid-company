@@ -420,8 +420,8 @@ class Service(object):
         try:
             xingtu.ip = ip
             xingtu = get_xt.get(words,xingtu)
-            xingtu = xingtu.bejson(xingtu)
         except:
             exp = traceback.format_exc()
             xingtu.error = exp
+        xingtu = xingtu.bejson(xingtu)
         return xingtu
