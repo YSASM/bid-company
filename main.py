@@ -166,6 +166,8 @@ class Main(object):
         start = int(float(time())*1000)
         try:
             words = request.args.get('words')
+            page = request.args.get('page')
+            limit = request.args.get('limit')
             ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
             ren = Main.s.get('detail',words,ip,start)
         except:
@@ -174,6 +176,8 @@ class Main(object):
             detail.error = exp
             ren = detail.bejson(detail)
             Main.s.add_log(Main.s.request_time(start),ren,'detail')
+        if page and limit:
+            ren = Main.pagedown(ren,page,limit)
         return jsonify(ren)
     def pagedown(ren,page,limit):
         pages = []
@@ -256,6 +260,12 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         words = request.args.get('words')
         data = Main.s.get_xingtu(words,ip)
+        return jsonify(data)
+    @api.route('/xingtu_s',methods=['get'])
+    def getxingtusimple():
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        words = request.args.get('words')
+        data = Main.s.get_xingtu_simple(words,ip)
         return jsonify(data)
 
 if __name__ == '__main__':

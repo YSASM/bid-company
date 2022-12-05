@@ -425,3 +425,14 @@ class Service(object):
             xingtu.error = exp
         xingtu = xingtu.bejson(xingtu)
         return xingtu
+    def get_xingtu_simple(self,words,ip):
+        xingtu = Xingtu()
+        get_xt = GetXingtuInfo()
+        try:
+            xingtu.ip = ip
+            xingtu = get_xt.GetSearch(words,xingtu)
+        except:
+            exp = traceback.format_exc()
+            xingtu.error = exp
+        xingtu = xingtu.bejson(xingtu)
+        return xingtu

@@ -1,5 +1,4 @@
 import time
-
 import requests
 import execjs
 class GetXingtuInfo(object):
@@ -256,10 +255,44 @@ class GetXingtuInfo(object):
         }
         xingtu.data = data
         return xingtu
+    def GetSearch(self,inputKey,xingtu):
+        params = (
+            ('platform_source', '1'),
+            ('key', inputKey),
+            ('order_by', 'score'),
+            ('sort_type', '2'),
+            ('search_scene', '1'),
+            ('display_scene', '1'),
+            ('limit', '20'),
+            ('page', '1'),
+            ('regular_filter', '{"current_tab":3,"marketing_target":1,"task_category":1}'),
+            ('attribute_filter', '{}'),
+            ('author_pack_filter', '{}'),
+            ('author_list_filter', '{}'),
+            ('service_name', 'go_search.AdStarGoSearchService'),
+            ('service_method', 'SearchForStarAuthors'),
+            ('sign_strict', '1'),
+            ('sign', self.get_sign("SearchForStarAuthors", inputKey)),
+        )
 
+        response = requests.get('https://www.xingtu.cn/h/api/gateway/handler_get/', headers=self.headers, params=params)
+        data = response.json().get("data").get("authors")[0].get("attribute_datas")
+        # follower
+        follower = data.get("follower")
+        # 预期cpm prospective_20_60_cpm
+        cpm = data.get("prospective_20_60_cpm")
+        # pro_play expected_play_num
+        pro_play = data.get("expected_play_num")
+        xingtu.data = {
+            "name" : inputKey,
+            "follower" : follower,
+            "cpm" : cpm,
+            "pro_play" : pro_play
+        }
+        return xingtu
 if __name__ == '__main__':
     xt = GetXingtuInfo()
-    xt.run()
+    print(xt.GetSearch("工程那些事"))
 #     start_id = xt.search_key("酒水那些事")
 #     print("星图id: ", start_id)
 #     shop_data = xt.get_shoping(start_id)

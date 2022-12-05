@@ -164,5 +164,12 @@ function getAuthorWatchedDistribution(star_id) {
     result = t.bytesToHex(t.wordsToBytes(a(text_args, n)))
     return result
 }
-star_id = "6952745739747328036"
-console.log(getAuthorWatchedDistribution(star_id))
+// 搜索接口
+function SearchForStarAuthors(key) {
+    text_args = "attribute_filterattribute_filterauthor_list_filterauthor_list_filterauthor_pack_filterauthor_pack_filterdisplay_scene1key"+key+"limit20order_byscorepage1platform_source1regular_filterregular_filtersearch_scene1service_methodSearchForStarAuthorsservice_namego_search.AdStarGoSearchServicesign_strict1sort_type2e39539b8836fb99e1538974d3ac1fe98"
+    n = undefined
+    result = t.bytesToHex(t.wordsToBytes(a(text_args, n)))
+    return result
+}
+star_id = "工程那些事"
+console.log(SearchForStarAuthors(star_id))
