@@ -8,26 +8,21 @@ class GetXingtuInfo(object):
         'cookie': 'sessionid_ss=0792d151a61aa76ce8285f90a14ec384;',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
     }
-
+    f = open(r'static/xingtu.js', 'r', encoding='utf-8').read()
+    context = execjs.compile(f)
 
     def get_sign(self, methods, args):
-        f = open(r'static\xingtu.js', 'r', encoding='utf-8').read()
-        context = execjs.compile(f)
-        result = context.call(methods, args)
+        result = self.context.call(methods, args)
         return result
 
 
     def get_sign1(self, page):
-        f = open('demo.js', 'r', encoding='utf-8').read()
-        context = execjs.compile(f)
-        result = context.call("get_sign1", page)
+        result = self.context.call("get_sign1", page)
         return result
 
 
     def get_sign2(self, challenge_id):
-        f = open('demo.js', 'r', encoding='utf-8').read()
-        context = execjs.compile(f)
-        result = context.call("get_sign2", challenge_id)
+        result = self.context.call("get_sign2", challenge_id)
         return result
 
 
@@ -262,8 +257,9 @@ class GetXingtuInfo(object):
         xingtu.data = data
         return xingtu
 
-# if __name__ == '__main__':
-#     xt = GetXingtuInfo()
+if __name__ == '__main__':
+    xt = GetXingtuInfo()
+    xt.run()
 #     start_id = xt.search_key("酒水那些事")
 #     print("星图id: ", start_id)
 #     shop_data = xt.get_shoping(start_id)
