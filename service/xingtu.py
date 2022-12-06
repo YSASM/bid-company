@@ -128,7 +128,10 @@ class GetXingtuInfo(object):
 
         response = requests.get('https://www.xingtu.cn/h/api/gateway/handler_get/', headers=self.headers, params=params)
         data = response.json().get('data').get('authors')
-        return data[0].get("star_id")
+        back = []
+        for d in data:
+            back.append(d.get("star_id"))
+        return back
 
 
     def get_shoping(self, start_id):
@@ -244,16 +247,18 @@ class GetXingtuInfo(object):
         return response.json()
     def get(self,words,xingtu):
         xt = GetXingtuInfo()
-        start_id = xt.search_key(words)
-        data = {
-            "id" : start_id,
-            "shoping" : xt.get_shoping(start_id)['data'],
-            "price" : xt.get_prices(start_id),
-            "source" : xt.getAuthorLinkScore(start_id)['data'],
-            "spreadInfo" : xt.getAuthorSpreadInfo(start_id),
-            "authorwatcheddistribution" : xt.getAuthorWatchedDistribution(start_id)['data']
-        }
-        xingtu.data = data
+        start_ids = xt.search_key(words)
+        back = []
+        for start_id in start_ids:
+            back.append({
+                "id" : start_id,
+                "shoping" : xt.get_shoping(start_id)['data'],
+                "price" : xt.get_prices(start_id),
+                "source" : xt.getAuthorLinkScore(start_id)['data'],
+                "spreadInfo" : xt.getAuthorSpreadInfo(start_id),
+                "authorwatcheddistribution" : xt.getAuthorWatchedDistribution(start_id)['data']
+            })
+        xingtu.data = back
         return xingtu
     def GetSearch(self,inputKey,xingtu):
         params = (
@@ -276,19 +281,24 @@ class GetXingtuInfo(object):
         )
 
         response = requests.get('https://www.xingtu.cn/h/api/gateway/handler_get/', headers=self.headers, params=params)
-        data = response.json().get("data").get("authors")[0].get("attribute_datas")
-        # follower
-        follower = data.get("follower")
-        # 预期cpm prospective_20_60_cpm
-        cpm = data.get("prospective_20_60_cpm")
-        # pro_play expected_play_num
-        pro_play = data.get("expected_play_num")
-        xingtu.data = {
-            "name" : inputKey,
-            "follower" : follower,
-            "cpm" : cpm,
-            "pro_play" : pro_play
-        }
+        data = response.json().get("data").get("authors")
+        back = []
+        for d in data:
+            d = d.get("attribute_datas")
+            # follower
+            follower = d.get("follower")
+            # 预期cpm prospective_20_60_cpm
+            cpm = d.get("prospective_20_60_cpm")
+            # pro_play expected_play_num
+            pro_play = d.get("expected_play_num")
+            back.append({
+                "name" : inputKey,
+                "follower" : follower,
+                "cpm" : cpm,
+                "pro_play" : pro_play
+            })
+        
+        xingtu.data = back
         return xingtu
 if __name__ == '__main__':
     xt = GetXingtuInfo()
