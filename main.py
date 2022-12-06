@@ -35,18 +35,28 @@ else:
     console_handler.setLevel(logging.ERROR)
 console_handler.setFormatter(logging.Formatter(fmt))
 logger.addHandler(console_handler)
-@async_call
-def del_log(day=7):
+def del_log_run(day):
     ms = MessageService()
     cl = CompanyLogDao()
     logger.info("【del_log】开始清理")
     t = int(time())-(day*86400)
     cl.del_old(t)
-    daycount=0
     logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
     ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
+@async_call
+def del_log(day=7):
+    daycount = 86400
+    while True:
+        if daycount>=86400:
+            del_log_run(day)
+            daycount=0
+        sleep(1)
+        daycount+=1
+    
+    
 def run_api():
     main = Main()
+    del_log()
     # main.api.run(port=9252,host='0.0.0.0') # 启动服务
     waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
 class Main(object):
@@ -290,8 +300,9 @@ class Main(object):
         return jsonify(data)
     @api.route('/del_log',methods=['get'])
     def del_company_log():
+        day = request.args.get('day')
         try:
-            del_log()
+            del_log_run(day=day)
             data = {"code":0,"msg":"操作成功"}
         except:data = {"code":1,"msg":"操作失败"}
         return jsonify(data)
