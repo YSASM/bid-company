@@ -225,11 +225,11 @@ class Service(object):
         ren = list.bejson(list)
         self.add_log(self.request_time(start),ren,method)
         return ren
-    def get(self,method,words,ip,start,type_='',**kwarg):
+    def get(self,method,words,ip,start,type='',**kwarg):
         if method == 'detail':
             return self.get_detail(method,start,words,ip,**kwarg)
         elif method == 'list':
-            return self.get_list(method,start,words,ip,type_)
+            return self.get_list(method,start,words,ip,type)
     def get_log_byId(self,id):
         try:
             backlog = Log()
