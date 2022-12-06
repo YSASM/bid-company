@@ -1,21 +1,31 @@
 import traceback
+from base.AESCBC import get_decrypt_data, get_encrypt_data, get_detail_encrypt_data
 from base.http_wrapper import HttpWrapper
 from api.mode import DetailData,Detail
 import json
 class api_kanzhunwang_detail(object):
-    def get_list(self,key):
+    def get_list(self,key,page,limit):
+        iv = "8krUawwVMg9RdHK4"
         headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
         }
+        t = {
+            "query": key,
+            "pageNum": page,
+            "limit": limit+1
+        }
+        b = get_detail_encrypt_data(t, iv)
         params = (
-            ('query', key),
+            ('b', b),
+            ('kiv', iv),
         )
-        code,response = HttpWrapper.get('https://www.kanzhun.com/api/search/autoComplete_v3.json', headers=headers, params=params)
+        code,response = HttpWrapper.get('https://www.kanzhun.com/api_to/search/company_v2.json', headers=headers, params=params)
         if code!='ok':
             return 0,'网络错误'
-        return 1,response.text
-    def run(self,words,detail):
-        code,res = self.get_list(words)
+        result = get_decrypt_data(response.text, iv)
+        return 1,result
+    def run(self,words,detail,page=1,limit=100):
+        code,res = self.get_list(words,page,limit)
         if code == 0:
             detail.error = res
             return detail
@@ -25,13 +35,20 @@ class api_kanzhunwang_detail(object):
             exp = traceback.format_exc()
             detail.error = exp
             return detail
-        res = res['resdata']
+        detail.count = res['resdata']['totalCount']
+        res = res['resdata']['zpCompanyList']
+        # self.corporate_representative = '-'
+        # self.registered_capita = '-'
+        # self.incorporation_date = '='
         back = []
         for r in res:
             data = DetailData()
             data.logo = r['logo']
-            data.name = r['value']
-            data.keyNo = r['encSearchId']
+            data.name = r['companyName']
+            data.keyNo = r['encCompanyId']
+            data.corporate_representative = r['registFinance']
+            data.registered_capita = r['legal']
+            data.incorporation_date = r['registTime']
             back.append(data.bejson(data))
         detail.data = back
         return detail

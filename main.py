@@ -2,7 +2,8 @@
 # encoding:utf-8
 import json,logging,hashlib,os,datetime,base64
 from logging import handlers
-from time import time
+import waitress
+from time import time,sleep,strftime,localtime
 import traceback
 from flask import Flask, render_template, request, jsonify,session,redirect,url_for,make_response
 from flask_cors import *
@@ -10,6 +11,9 @@ from service import service
 from config import Config
 from api.mode import Detail,List
 from model.bid_admin import AdminDao,Admin
+from model.bid_company_log import CompanyLogDao
+from base.ansync_call import async_call
+from service.message import MessageService
 # from qqwry import updateQQwry
 # result = updateQQwry('base/qqwry.dat')
 logintoken = []
@@ -31,6 +35,20 @@ else:
     console_handler.setLevel(logging.ERROR)
 console_handler.setFormatter(logging.Formatter(fmt))
 logger.addHandler(console_handler)
+@async_call
+def del_log(day=7):
+    ms = MessageService()
+    cl = CompanyLogDao()
+    logger.info("【del_log】开始清理")
+    t = int(time())-(day*86400)
+    cl.del_old(t)
+    daycount=0
+    logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
+    ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
+def run_api():
+    main = Main()
+    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
+    waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
 class Main(object):
     ad = AdminDao()
     s = service.Service()
@@ -174,15 +192,13 @@ class Main(object):
             if limit:
                 limit = int(limit)
             ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-            ren = Main.s.get('detail',words,ip,start)
+            ren = Main.s.get('detail',words,ip,start,page=page,limit=limit)
         except:
             detail = Detail()
             exp = traceback.format_exc()
             detail.error = exp
             ren = detail.bejson(detail)
             Main.s.add_log(Main.s.request_time(start),ren,'detail')
-        if page and limit:
-            ren = Main.pagedown(ren,page,limit)
         return jsonify(ren)
     def pagedown(ren,page,limit):
         pages = []
@@ -272,9 +288,13 @@ class Main(object):
         words = request.args.get('words')
         data = Main.s.get_xingtu_simple(words,ip)
         return jsonify(data)
+    @api.route('/del_log',methods=['get'])
+    def del_company_log():
+        try:
+            del_log()
+            data = {"code":0,"msg":"操作成功"}
+        except:data = {"code":1,"msg":"操作失败"}
+        return jsonify(data)
 
 if __name__ == '__main__':
-    main = Main()
-    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    main.api.run(port=9252,debug=True,host='0.0.0.0') # 启动服务
-    # ren = Main.s.get('detail','万达')
+    run_api()

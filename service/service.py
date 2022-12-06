@@ -141,7 +141,7 @@ class Service(object):
         md5 = get_md5(list.data['name'])
         return self.cs.exist(md5)
 
-    def get_detail(self,method,start,words,ip):
+    def get_detail(self,method,start,words,ip,**kwarg):
         exp = ''
         detail = Detail()
         detail.ip = ip
@@ -158,7 +158,7 @@ class Service(object):
             detail.type = i[0]
             self.d = i[1]()
             try:
-                detail = self.d.run(words,detail)
+                detail = self.d.run(words,detail,**kwarg)
             except:
                 exp = traceback.format_exc()
                 detail.error = exp
@@ -225,11 +225,11 @@ class Service(object):
         ren = list.bejson(list)
         self.add_log(self.request_time(start),ren,method)
         return ren
-    def get(self,method,words,ip,start,type=''):
+    def get(self,method,words,ip,start,type_='',**kwarg):
         if method == 'detail':
-            return self.get_detail(method,start,words,ip)
+            return self.get_detail(method,start,words,ip,**kwarg)
         elif method == 'list':
-            return self.get_list(method,start,words,ip,type)
+            return self.get_list(method,start,words,ip,type_,**kwarg)
     def get_log_byId(self,id):
         try:
             backlog = Log()

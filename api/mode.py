@@ -3,12 +3,18 @@ class DetailData(object):
         self.logo = '-'
         self.name = '-'
         self.keyNo = '-'
+        self.corporate_representative = '-'
+        self.registered_capita = '-'
+        self.incorporation_date = '-'
 
     def bejson(self,data):
         return {
             'logo':data.logo,
             'name':data.name,
             'keyNo':data.keyNo,
+            'corporate_representative' : data.corporate_representative,
+            'registered_capita':data.registered_capita,
+            'incorporation_date':data.incorporation_date
         }
 class Detail(object):
     def __init__(self):
@@ -19,6 +25,7 @@ class Detail(object):
         self.msg = ""
         self.error = ""
         self.words = ""
+        self.count = 0
 
     def bejson(self,data):
         return {
@@ -26,7 +33,7 @@ class Detail(object):
             "words":data.words,#搜索词
             "data": data.data,
             "type": data.type,#api类型（qichacha。
-            "count": len(data.data),#公司数
+            "count": len(data.data) if data.count==0 else data.count,#公司数 if 
             "error" : data.error,#发生错误
             "ip": data.ip,#请求IP
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息

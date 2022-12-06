@@ -103,3 +103,13 @@ class CompanyLogDao(object):
         ret = session.query(CompanyLog).filter(CompanyLog.create_time>start,CompanyLog.create_time<end,CompanyLog.type=='detail').all()
         session.close()
         return ret
+    @classmethod
+    def del_old(self,iss_time):
+        session = DBSession()
+        ret = session.query(CompanyLog).filter(CompanyLog.create_time<iss_time).all()
+        session.close() 
+        for c in ret:
+            session = DBSession()
+            session.query(CompanyLog).filter(CompanyLog.id < c.id).delete()
+            session.commit()
+            session.close() 
