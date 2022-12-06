@@ -4,7 +4,7 @@ from service.company import CompanyService
 class api_yuanlue_detail(object):
     def __init__(self):
         self.cs = CompanyService()
-    def run(self,words,detail):
+    def run(self,words,detail,**kwarg):
         companys = self.cs.match_detail_companys(words)
         if companys==[]:
             return detail

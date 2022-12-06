@@ -25,7 +25,7 @@ class api_qichacha_detail(object):
         except:
             return 0,'返回错误'
         return 1,result
-    def run(self,input_key,detail):
+    def run(self,input_key,detail,**kwarg):
         code,tid = self.get_tid()
         if code == 0:
             detail.error = tid
