@@ -229,7 +229,7 @@ class Service(object):
         if method == 'detail':
             return self.get_detail(method,start,words,ip,**kwarg)
         elif method == 'list':
-            return self.get_list(method,start,words,ip,type_,**kwarg)
+            return self.get_list(method,start,words,ip,type_)
     def get_log_byId(self,id):
         try:
             backlog = Log()
