@@ -12,7 +12,7 @@ class api_kanzhunwang_detail(object):
         t = {
             "query": key,
             "pageNum": page,
-            "limit": limit+1
+            "limit": limit
         }
         b = get_detail_encrypt_data(t, iv)
         params = (
