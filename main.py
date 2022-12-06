@@ -209,6 +209,8 @@ class Main(object):
             detail.error = exp
             ren = detail.bejson(detail)
             Main.s.add_log(Main.s.request_time(start),ren,'detail')
+        if page and limit and ren['type']!='kanzhunwang':
+            ren = Main.pagedown(ren,page,limit)
         return jsonify(ren)
     def pagedown(ren,page,limit):
         pages = []
