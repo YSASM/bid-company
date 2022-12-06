@@ -130,7 +130,10 @@ class GetXingtuInfo(object):
         data = response.json().get('data').get('authors')
         back = []
         for d in data:
-            back.append(d.get("star_id"))
+            back.append({
+                'id' : d.get("star_id"),
+                'name' : d.get("attribute_datas").get("nick_name").replace('\'','').replace('\"','').encode('utf-8').decode('unicode_escape')
+                })
         return back
 
 
@@ -249,15 +252,36 @@ class GetXingtuInfo(object):
         xt = GetXingtuInfo()
         start_ids = xt.search_key(words)
         back = []
-        for start_id in start_ids:
-            back.append({
-                "id" : start_id,
-                "shoping" : xt.get_shoping(start_id)['data'],
-                "price" : xt.get_prices(start_id),
-                "source" : xt.getAuthorLinkScore(start_id)['data'],
-                "spreadInfo" : xt.getAuthorSpreadInfo(start_id),
-                "authorwatcheddistribution" : xt.getAuthorWatchedDistribution(start_id)['data']
-            })
+        for start in start_ids:
+            start_id = start['id']
+            name = start['name']
+            try:
+                shoping = xt.get_shoping(start_id)
+                price = xt.get_prices(start_id)
+                source = xt.getAuthorLinkScore(start_id)
+                authorwatcheddistribution = xt.getAuthorWatchedDistribution(start_id)
+                try:
+                    shoping = shoping['data']
+                except: shoping = None
+                try:
+                    source = source['data']
+                except: source = None
+                try:
+                    authorwatcheddistribution = authorwatcheddistribution['data']
+                except: authorwatcheddistribution = None
+                    
+                data = {
+                    "id" : start_id,
+                    "name" : name,
+                    "shoping" : shoping,
+                    "price" : price,
+                    "source" : source,
+                    "spreadInfo" : xt.getAuthorSpreadInfo(start_id),
+                    "authorwatcheddistribution" : authorwatcheddistribution
+                }
+                back.append(data)
+            except:
+                continue
         xingtu.data = back
         return xingtu
     def GetSearch(self,inputKey,xingtu):
@@ -286,13 +310,14 @@ class GetXingtuInfo(object):
         for d in data:
             d = d.get("attribute_datas")
             # follower
+            nick_name = d.get("nick_name").replace('\'','').replace('\"','').encode('utf-8').decode('unicode_escape')
             follower = d.get("follower")
             # 预期cpm prospective_20_60_cpm
             cpm = d.get("prospective_20_60_cpm")
             # pro_play expected_play_num
             pro_play = d.get("expected_play_num")
             back.append({
-                "name" : inputKey,
+                "name" : nick_name,
                 "follower" : follower,
                 "cpm" : cpm,
                 "pro_play" : pro_play

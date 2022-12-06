@@ -424,6 +424,7 @@ class Service(object):
         return data
     def get_xingtu(self,words,ip):
         xingtu = Xingtu()
+        xingtu.words = words
         get_xt = GetXingtuInfo()
         try:
             xingtu.ip = ip
@@ -435,6 +436,7 @@ class Service(object):
         return xingtu
     def get_xingtu_simple(self,words,ip):
         xingtu = Xingtu()
+        xingtu.words = words
         get_xt = GetXingtuInfo()
         try:
             xingtu.ip = ip
