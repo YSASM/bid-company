@@ -50,5 +50,5 @@ class CompanyService(object):
             match = regex.search(item.name)
             if match:
                 # 如果匹配，就添加到列表中
-                suggestions.append([item.id,item.name,item.logo,item.corporate_representative])
+                suggestions.append([item.id,item.name,item.logo,item.corporate_representative,item.registered_capita ,item.incorporation_date ])
         return suggestions
