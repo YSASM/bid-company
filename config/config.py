@@ -12,6 +12,10 @@ class Config(object):
         return os.environ.get("ENV", "test")
 
     @classmethod
+    def xingtu(cls):
+        return os.environ.get("XINGTU", "sessionid_ss=0792d151a61aa76ce8285f90a14ec384;")
+
+    @classmethod
     def cluster(cls):
         return os.environ.get("CLUSTER", "")
 

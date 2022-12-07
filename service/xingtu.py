@@ -1,10 +1,11 @@
 import time
 import requests
 import execjs
+from config import Config
 class GetXingtuInfo(object):
-
+    config = Config()
     headers = {
-        'cookie': 'sessionid_ss=0792d151a61aa76ce8285f90a14ec384;',
+        'cookie': config.xingtu(),
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
     }
     f = open(r'static/xingtu.js', 'r', encoding='utf-8').read()
