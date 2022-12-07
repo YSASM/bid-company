@@ -180,7 +180,8 @@ class Main(object):
         try:
             words = request.args.get('words')
             type = request.args.get('type')
-            ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+            ip = request.args.get('ip')
+            ip = ip if ip else request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
             ren = Main.s.get('list',words,ip,start,type=type)
         except:
             list = List()
@@ -196,12 +197,17 @@ class Main(object):
             words = request.args.get('words')
             page = request.args.get('page')
             limit = request.args.get('limit')
+            ip = request.args.get('ip')
             if page:
                 page = int(page)
+            else:
+                page = 1
             limit = request.args.get('limit')
             if limit:
                 limit = int(limit)
-            ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+            else:
+                limit = 20
+            ip = ip if ip else request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
             ren = Main.s.get('detail',words,ip,start,page=page,limit=limit)
         except:
             detail = Detail()
