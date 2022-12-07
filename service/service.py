@@ -139,14 +139,15 @@ class Service(object):
         md5 = get_md5(list.data['name'])
         return self.cd.exist(md5)
 
-    def get_detail(self,method,start,words,ip,**kwarg):
+    def get_detail(self,method,start,words,ip,write_log=True,**kwarg):
         exp = ''
         detail = Detail()
         detail.ip = ip
         if not words:
             detail.error = "words参数错误"
             ren = detail.bejson(detail)
-            self.add_log(self.request_time(start),ren,method)
+            if write_log:
+                self.add_log(self.request_time(start),ren,method)
             return ren
         detail.words = words
         for i in self.detail:
@@ -161,7 +162,8 @@ class Service(object):
                 exp = traceback.format_exc()
                 detail.error = exp
                 ren = detail.bejson(detail)
-                self.add_log(self.request_time(start),ren,method)
+                if write_log:
+                    self.add_log(self.request_time(start),ren,method)
                 continue
             if len(detail.data) == 0:
                 continue
@@ -172,16 +174,18 @@ class Service(object):
                     exp = traceback.format_exc()
                     detail.error = exp
                     ren = detail.bejson(detail)
-                    self.add_log(self.request_time(start),ren,method)
+                    if write_log:
+                        self.add_log(self.request_time(start),ren,method)
                     return ren
             ren = detail.bejson(detail)
-            self.add_log(self.request_time(start),ren,method)
+            if write_log:
+                self.add_log(self.request_time(start),ren,method)
             return ren
         detail.error = "无结果"
         ren = detail.bejson(detail)
         return ren
     #详情页查询
-    def get_list(self,method,start,words,ip,type):
+    def get_list(self,method,start,words,ip,type,write_log=True):
         list = List()
         list.ip = ip
         #根据type调用相应api
@@ -189,17 +193,20 @@ class Service(object):
         if not self.o:
             list.error = 'type参数错误'
             ren = list.bejson(list)
-            self.add_log(self.request_time(start),ren,method)
+            if write_log:
+                self.add_log(self.request_time(start),ren,method)
             return ren
         if not words:
             list.error = 'words参数错误'
             ren = list.bejson(list)
-            self.add_log(self.request_time(start),ren,method)
+            if write_log:
+                self.add_log(self.request_time(start),ren,method)
             return ren
         if not words and not type:
             list.error = '需要参数：words,type'
             ren = list.bejson(list)
-            self.add_log(self.request_time(start),ren,method)
+            if write_log:
+                self.add_log(self.request_time(start),ren,method)
             return ren
         list.words = words
         list.type = self.o[0]
@@ -210,7 +217,8 @@ class Service(object):
             exp = traceback.format_exc()
             list.error = exp
             ren = list.bejson(list)
-            self.add_log(self.request_time(start),ren,method)
+            if write_log:
+                self.add_log(self.request_time(start),ren,method)
             return ren
         try:
             if list.type!="yuanlue":
@@ -221,7 +229,8 @@ class Service(object):
         except:
             self.send_alarm('get_list','add sql error!')
         ren = list.bejson(list)
-        self.add_log(self.request_time(start),ren,method)
+        if write_log:
+            self.add_log(self.request_time(start),ren,method)
         return ren
     def get(self,method,words,ip,start,type='',**kwarg):
         if method == 'detail':
@@ -410,12 +419,12 @@ class Service(object):
         if data["keyNo"]:
             return data
         start = int(float(time.time())*1000)
-        detail = self.get_detail('detail',start,words,ip)
+        detail = self.get_detail('detail',start,words,ip,write_log=False)
         # logging.info(str(detail))
         if detail['data']:
             d = detail['data'][0]
             start = int(float(time.time())*1000)
-            self.get_list('list',start,d['keyNo'],ip,detail['type'])
+            self.get_list('list',start,d['keyNo'],ip,detail['type'],write_log=False)
         count = 5
         while not data["keyNo"]:
             if count <= 0:
