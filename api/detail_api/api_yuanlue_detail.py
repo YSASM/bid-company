@@ -9,15 +9,15 @@ class api_yuanlue_detail(object):
         if companys==[]:
             return detail
         back = []
-        for (id,name,logo,corporate_representative,registered_capita,incorporation_date ) in companys:
-            if corporate_representative:
+        for item in companys:
+            if item.corporate_representative:
                 data = DetailData()
-                data.logo = logo
-                data.name = name
-                data.keyNo = id
-                data.corporate_representative = corporate_representative
-                data.registered_capita = registered_capita 
-                data.incorporation_date = incorporation_date 
+                data.logo = item.logo
+                data.name = item.name
+                data.keyNo = item.id
+                data.corporate_representative = item.corporate_representative
+                data.registered_capita = item.registered_capital
+                data.incorporation_date = item.incorporation_date 
                 back.append(data.bejson(data))
         detail.data = back
         return detail
