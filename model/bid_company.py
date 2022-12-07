@@ -72,7 +72,26 @@ class CompanyDao(object):
         sesion.add(company)
         sesion.commit()
         sesion.close()
-
+    def exist(self, md5):
+        sesion = DBSession()
+        res = sesion.query(Company).filter(Company.name_md5 == md5).all()
+        sesion.close()
+        return len(res) >= 1
+    def match_companys(self,md5):
+        sesion = DBSession()
+        company = sesion.query(Company).filter(Company.name_md5 == md5).first()
+        sesion.close()
+        return company
+    def match_detail_companys(self,key):
+        """
+        模糊查找器
+        :param key: 关键字
+        :return: list
+        """
+        sesion = DBSession()
+        companys = sesion.query(Company).filter(Company.name.like('%'+key+'%')).all()
+        sesion.close()
+        return companys
     @classmethod
     def query_all(cls):
         session = DBSession()

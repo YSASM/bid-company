@@ -1,11 +1,11 @@
 from api.mode import DetailData
 from base.get_md5 import get_md5
-from service.company import CompanyService
+from model.bid_company import CompanyDao
 class api_yuanlue_detail(object):
     def __init__(self):
-        self.cs = CompanyService()
+        self.cd = CompanyDao()
     def run(self,words,detail,**kwarg):
-        companys = self.cs.match_detail_companys(words)
+        companys = self.cd.match_detail_companys(words)
         if companys==[]:
             return detail
         back = []

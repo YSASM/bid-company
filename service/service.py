@@ -4,7 +4,6 @@ import requests,socket
 from base.get_md5 import get_md5
 from collections import Counter
 from model.bid_company import Company, CompanyDao
-from service.company import CompanyService
 from service.message import MessageService
 import time
 import traceback
@@ -21,7 +20,6 @@ class Service(object):
         # self.reload_detail()
         self.detail = detail_api.get_list()
         self.list = list_api.get_list()
-        self.cs = CompanyService()
         self.cd = CompanyDao()
         self.cld = CompanyLogDao()
         self.add = self.cld.add
@@ -59,7 +57,7 @@ class Service(object):
         return None
     def exist_detail(self,item):
         md5 = get_md5(item['name'])
-        return self.cs.exist(md5)
+        return self.cd.exist(md5)
     def get_company(self,md5):
         company = self.cd.get_by_md5(md5)
         return company
@@ -139,7 +137,7 @@ class Service(object):
     #下拉列表查询
     def exist_list(self,list):
         md5 = get_md5(list.data['name'])
-        return self.cs.exist(md5)
+        return self.cd.exist(md5)
 
     def get_detail(self,method,start,words,ip,**kwarg):
         exp = ''
@@ -418,8 +416,12 @@ class Service(object):
             d = detail['data'][0]
             start = int(float(time.time())*1000)
             self.get_list('list',start,d['keyNo'],ip,detail['type'])
+        count = 5
         while not data["keyNo"]:
+            if count <= 0:
+                break
             data = self.get_yuanlue_api_company_id(words)
+            count-=1
             time.sleep(1)
         return data
     def get_xingtu(self,words,ip):
