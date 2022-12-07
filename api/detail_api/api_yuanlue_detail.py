@@ -14,7 +14,7 @@ class api_yuanlue_detail(object):
                 data = DetailData()
                 data.logo = item.logo
                 data.name = item.name
-                data.keyNo = item.id
+                data.keyNo = str(item.id)
                 data.corporate_representative = item.corporate_representative
                 data.registered_capita = item.registered_capital
                 data.incorporation_date = item.incorporation_date 
