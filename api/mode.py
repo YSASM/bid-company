@@ -12,16 +12,22 @@ def sort_data(data,words):
     data.sort(key = lambda i:i['name'].index(words),reverse=False)
     return data
 def re_registered_capital(s):
-    s_l = s.split('万')
-    if len(s_l)<=1:
+    try:
+        s_l = s.split('万')
+        if len(s_l)<=1:
+            return s
+        num = float(s_l[0])/10000
+        if num<1:
+            if s_l[1] == '':
+                s_l[1] = '人民币'
+                return s_l[0] +'万'+s_l[1]
+            return s
+        num = round(num,3)
+        if s_l[1] == '':
+            s_l[1] = '人民币'
+        return str(num)+'亿'+s_l[1]
+    except:
         return s
-    num = float(s_l[0])/10000
-    if num<1:
-        return s
-    num = round(num,3)
-    if s_l[1] == '':
-        s_l[1] = '人民币'
-    return str(num)+'亿'+s_l[1]
 class DetailData(object):
     def __init__(self):
         self.logo = '-'
