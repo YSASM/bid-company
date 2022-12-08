@@ -46,8 +46,8 @@ class api_kanzhunwang_detail(object):
             data.logo = r['logo']
             data.name = r['companyName']
             data.keyNo = r['encCompanyId']
-            data.corporate_representative = r['registFinance']
-            data.registered_capita = r['legal']
+            data.corporate_representative = r['legal']
+            data.registered_capita = r['registFinance']
             data.incorporation_date = r['registTime']
             back.append(data.bejson(data))
         detail.data = back

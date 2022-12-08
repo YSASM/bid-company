@@ -11,7 +11,13 @@ def sort_data(data,words):
         return data
     data.sort(key = lambda i:i['name'].index(words),reverse=False)
     return data
-
+def re_registered_capital(s):
+    s = s.split('万')
+    if len(s)==1:
+        return s[0]
+    num = float(s[0])/10000
+    num = round(num,3)
+    return str(num)+'亿人民币'
 class DetailData(object):
     def __init__(self):
         self.logo = '-'
@@ -27,7 +33,7 @@ class DetailData(object):
             'name':data.name,
             'keyNo':data.keyNo,
             'corporate_representative' : data.corporate_representative,
-            'registered_capita':data.registered_capita,
+            'registered_capita':re_registered_capital(data.registered_capita),
             'incorporation_date':data.incorporation_date
         }
 class Detail(object):
@@ -84,7 +90,7 @@ class ListData(object):
             'old_name' : data.old_name,
             'registration_status' : data.registration_status,
             'corporate_representative' : data.corporate_representative,
-            'registered_capital' : data.registered_capital,
+            'registered_capital' : re_registered_capital(data.registered_capital),
             'incorporation_date' : data.incorporation_date,
             'approval_date' : data.approval_date,
             'area': data.area,
