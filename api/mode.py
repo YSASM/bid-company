@@ -19,6 +19,8 @@ def re_registered_capital(s):
     if num<1:
         return s
     num = round(num,3)
+    if s_l[1] == '':
+        s_l[1] = '人民币'
     return str(num)+'亿'+s_l[1]
 class DetailData(object):
     def __init__(self):
