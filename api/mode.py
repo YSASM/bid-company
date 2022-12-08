@@ -12,10 +12,12 @@ def sort_data(data,words):
     data.sort(key = lambda i:i['name'].index(words),reverse=False)
     return data
 def re_registered_capital(s):
-    s = s.split('万')
-    if len(s)==1:
-        return s[0]
-    num = float(s[0])/10000
+    s_l = s.split('万')
+    if len(s_l)<=1:
+        return s
+    num = float(s_l[0])/10000
+    if num<1:
+        return s
     num = round(num,3)
     return str(num)+'亿人民币'
 class DetailData(object):
