@@ -1,3 +1,17 @@
+def sort_data(data,words):
+    temp = []
+    for i in data:
+        if words not in i['name']:
+            continue
+        temp.append(i)
+    data = temp
+    if len(words)<=1 and len(data)<10:
+        return []
+    if not data:
+        return data
+    data.sort(key = lambda i:i['name'].index(words),reverse=False)
+    return data
+
 class DetailData(object):
     def __init__(self):
         self.logo = '-'
@@ -28,12 +42,13 @@ class Detail(object):
         self.count = 0
 
     def bejson(self,data):
+        data.data = sort_data(data.data,data.words)
         return {
             "code": 0 if data.error=="" else 1,#返回状态码
             "words":data.words,#搜索词
             "data": data.data,
             "type": data.type,#api类型（qichacha。
-            "count": len(data.data) if data.count==0 else data.count,#公司数 if 
+            "count": len(data.data) if data.count==0 or data.data==[] else data.count,#公司数 if 
             "error" : data.error,#发生错误
             "ip": data.ip,#请求IP
             "msg": '操作成功' if data.error=="" else '操作失败'#返回状态信息
