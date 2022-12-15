@@ -55,10 +55,23 @@ def del_log(day=7):
     
     
 def run_api():
-    main = Main()
-    del_log()
-    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
+    GETID = os.environ.get("GETID", "0")
+    if GETID == "1":
+        get_id = GET_ID()
+        waitress.serve(get_id.api, host='0.0.0.0', port='9252')# 启动服务
+    else:
+        main = Main()
+        del_log()
+        # main.api.run(port=9252,host='0.0.0.0') # 启动服务
+        waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
+class GET_ID(object):
+    api = Flask(__name__) 
+    @api.route('/getid',methods=['get'])
+    def getid():
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        words = request.args.get('words')
+        data = Main.s.get_id(words,ip)
+        return jsonify(data)
 class Main(object):
     ad = AdminDao()
     s = service.Service()
