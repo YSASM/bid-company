@@ -374,7 +374,7 @@ class Service(object):
             retimes['detail'] = sum(retimes['detail'])/len(retimes['detail']) if retimes['detail']!=[] else 0
             retimes['list'] = str(int(retimes['list']))+'ms'
             retimes['detail'] = str(int(retimes['detail']))+'ms'
-            back.data=[{
+            back.data=[] if retimes['list']=='0ms' and retimes['detail'] == '0ms' else [{
                         'name':'list',
                         'request_time':retimes['list']
                     },

@@ -67,15 +67,15 @@ class Main(object):
     # session.permanent=True
     api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
     CORS(api, supports_credentials=True, resources=r"/*")
-    def make_token(self,username,password,ip):
+    def make_token(username,password,ip):
         return hashlib.md5(username.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
-    def decode_base64(self,data):
+    def decode_base64(data):
         data = data.encode("utf-8")
         missing_padding = 4 - len(data) % 4
         if missing_padding:
             data += b'=' * missing_padding
         return base64.decodebytes(data)
-    def isLogin(self,ip,t,token=None):
+    def isLogin(ip,t,token=None):
         global logintoken
         username = session.get('username')
         password = session.get('password')
@@ -89,7 +89,7 @@ class Main(object):
                     return token
         if not username or not password:
             return False
-        token = self.make_token(username,password,ip)
+        token = Main.make_token(username,password,ip)
         if Main.ad.login(username,password):
             logintoken.append([token,t])
             return token
@@ -115,10 +115,10 @@ class Main(object):
         token = request.cookies.get('session')
         if token:
             token = token.split('.')
-            token = Main().decode_base64(token[0])
+            token = Main.decode_base64(token[0])
             token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
-        token = Main().isLogin(ip,time(),token=token)
+            token = Main.make_token(token['username'],token['password'],ip)
+        token = Main.isLogin(ip,time(),token=token)
         if token:
             res = make_response(redirect(url_for('manageonoff')))
             return res
@@ -130,12 +130,12 @@ class Main(object):
         token =request.cookies.get('session')
         if token:
             token = token.split('.')
-            token = Main().decode_base64(token[0])
+            token = Main.decode_base64(token[0])
             token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
-        token = Main().isLogin(ip,time(),token=token)
+            token = Main.make_token(token['username'],token['password'],ip)
+        token = Main.isLogin(ip,time(),token=token)
         if token:
-            res = make_response(render_template('statistics.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
+            res = make_response(render_template('statistics.html',username=session['username'],avatar=Main.ad.get_avatar(session['username'],session['password'])))
             return res
         return redirect(url_for('login'))
 
@@ -145,12 +145,12 @@ class Main(object):
         token =request.cookies.get('session')
         if token:
             token = token.split('.')
-            token = Main().decode_base64(token[0])
+            token = Main.decode_base64(token[0])
             token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
-        token = Main().isLogin(ip,time(),token=token)
+            token = Main.make_token(token['username'],token['password'],ip)
+        token = Main.isLogin(ip,time(),token=token)
         if token:
-            res = make_response(render_template('log.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
+            res = make_response(render_template('log.html',username=session['username'],avatar=Main.ad.get_avatar(session['username'],session['password'])))
             return res
         return redirect(url_for('login'))
     
@@ -160,12 +160,12 @@ class Main(object):
         token =request.cookies.get('session')
         if token:
             token = token.split('.')
-            token = Main().decode_base64(token[0])
+            token = Main.decode_base64(token[0])
             token = json.loads(token)
-            token = Main().make_token(token['username'],token['password'],ip)
-        token = Main().isLogin(ip,time(),token=token)
+            token = Main.make_token(token['username'],token['password'],ip)
+        token = Main.isLogin(ip,time(),token=token)
         if token:
-            res = make_response(render_template('onoff.html',username=session['username'],avatar=Main().ad.get_avatar(session['username'],session['password'])))
+            res = make_response(render_template('onoff.html',username=session['username'],avatar=Main.ad.get_avatar(session['username'],session['password'])))
             return res
         return redirect(url_for('login'))
     @api.route('/base/on_off.json',methods=['get']) 
