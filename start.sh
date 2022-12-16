@@ -15,6 +15,11 @@ echo "stdout_logfile = /app/log/run.log" >> /etc/supervisord.conf
 supervisord -c /etc/supervisord.conf 
 supervisorctl update
 supervisorctl start Flask
-while [ true ];do
+if [ "$MODE"x == "test"x ];then
+    while [ true ];do
+        nohup /usr/bin/python3 main.py >> log/run.log 2>&1
         sleep 86400000
     done
+else
+    exec /usr/bin/python3 main.py >> log/run.log 2>&1
+fi
