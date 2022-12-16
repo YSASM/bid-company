@@ -76,7 +76,7 @@
       elem: '#onofftable'
       ,id: 'onofftable'
       ,height: 700
-      ,url: '/base/on_off.json' //数据接口
+      ,url: 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/base/on_off.json' //数据接口
       ,page: true //开启分页
       ,cols: [[ //表头
         {field: 'sort', title: '排序', width:100, sort: true, fixed: 'left'}
@@ -117,7 +117,7 @@
         }
         $.ajax({
             type: "get",
-            url: "/restatus",
+            url: "http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/restatus",
             data: {
                 "name": name,
                 "status":status
