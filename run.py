@@ -43,6 +43,11 @@ def del_log_run(day):
     cl.del_old(t)
     logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
     ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
+api = Flask(__name__) 
+api.config['SECRET_KEY']=os.urandom(24)
+# session.permanent=True
+api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
+CORS(api, supports_credentials=True, resources=r"/*")
 @async_call
 def del_log(day=7):
     daycount = 86400
@@ -58,15 +63,10 @@ def run_api():
     main = Main()
     del_log()
     # main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
+    waitress.serve(api, host='0.0.0.0', port='9252')# 启动服务
 class Main(object):
     ad = AdminDao()
     s = service.Service()
-    api = Flask(__name__) 
-    api.config['SECRET_KEY']=os.urandom(24)
-    # session.permanent=True
-    api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
-    CORS(api, supports_credentials=True, resources=r"/*")
     def make_token(username,password,ip):
         return hashlib.md5(username.encode("utf-8")).hexdigest()+'-'+hashlib.md5(password.encode("utf-8")).hexdigest()+'-'+hashlib.md5(ip.encode("utf-8")).hexdigest()
     def decode_base64(data):
