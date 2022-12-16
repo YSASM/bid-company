@@ -63,7 +63,7 @@ def run_api():
     main = Main()
     del_log()
     # main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    waitress.serve(api, host='0.0.0.0', port='9252')# 启动服务
+    waitress.serve(api, host='0.0.0.0', port='19252')# 启动服务
 class Main(object):
     ad = AdminDao()
     s = service.Service()
