@@ -11,7 +11,6 @@ from service import service
 from config import Config
 from api.mode import Detail,List
 from model.bid_admin import AdminDao,Admin
-from werkzeug.contrib.profiler import ProfilerMiddleware
 from model.bid_company_log import CompanyLogDao
 from base.ansync_call import async_call
 from service.message import MessageService
@@ -45,7 +44,6 @@ def del_log_run(day):
     logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
     ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
 api = Flask(__name__) 
-api.wsgi_app = ProfilerMiddleware(api, profile_dir="/log/wsgi.log")
 api.config['SECRET_KEY']=os.urandom(24)
 # session.permanent=True
 api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
