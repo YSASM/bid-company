@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install supervisor
+cp /usr/local/python-3.9/bin/gunicorn /usr/bin/
 sudo touch /usr/etc/supervisor/conf.d/config.conf
 sudo gedit /usr/etc/supervisor/conf.d/config.conf
 echo "[program:FlaskGunicornSupervisor]\n
