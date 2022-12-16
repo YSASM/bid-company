@@ -1,7 +1,6 @@
 #!/bin/bash
-cp /usr/local/python-3.9/bin/gunicorn /usr/bin/
 echo "[program:FlaskGunicornSupervisor]" >> /etc/supervisord.conf
-echo "command=/usr/bin/gunicorn -w 5 -b 0.0.0.0:9252 run:api" >> /etc/supervisord.conf
+echo "command=/usr/local/python-3.9/bin/gunicorn -w 5 -b 0.0.0.0:9252 run:api" >> /etc/supervisord.conf
 echo "directory=/app  ;" >> /etc/supervisord.conf
 echo "user=root      ;" >> /etc/supervisord.conf
 echo "autostart=true   ;" >> /etc/supervisord.conf
