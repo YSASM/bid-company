@@ -127,7 +127,7 @@
     // timeStamp = timeStamp/1000
     // layer.msg(start);
     // var url = '/log?method=time&start='+String(start)+'&end='+String(end);
-    var url = 'http://127.0.0.1:9252/log?method=time&start='+String(start)+'&end='+String(end)
+    var url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time&start='+String(start)+'&end='+String(end)
     var method = 'time';
     var laypage = layui.laypage //分页
 	  var	table = layui.table //表格
@@ -173,8 +173,8 @@
     });
     
     // url = '127.0.0.1:9252/log?method=time'
-    url = 'http://127.0.0.1:9252/log?method=time'
-    // url = 'http://127.0.0.1:9252/log?method=time'
+    url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time'
+    // url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method=time'
     var  form = layui.form ;
     laydate = layui.laydate;
     laydate.render({     //创建时间选择框
@@ -205,7 +205,7 @@
       }]
       ,click: function(data, othis){
         var elem = $(this.elem);
-        url = 'http://127.0.0.1:9252/log?method='+ data.method;
+        url = 'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/log?method='+ data.method;
         method = data.method;
         if(data.method=='id'){
           $("#idinput1").show();
