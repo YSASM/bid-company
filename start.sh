@@ -10,8 +10,6 @@ echo "user=root      ;" >> /etc/supervisord.conf
 echo "autostart=true   ;" >> /etc/supervisord.conf
 echo "autorestart=true ;" >> /etc/supervisord.conf
 echo "startretires=5   ;" >> /etc/supervisord.conf
-supervisord -c /etc/supervisord.conf 
 supervisorctl update
-supervisorctl restart FlaskGunicornSupervisor
 sleep 86400000
     
