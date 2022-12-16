@@ -57,8 +57,8 @@ def del_log(day=7):
 def run_api():
     main = Main()
     del_log()
-    main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    # waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
+    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
+    waitress.serve(main.api, host='0.0.0.0', port='9252')# 启动服务
 class Main(object):
     ad = AdminDao()
     s = service.Service()
