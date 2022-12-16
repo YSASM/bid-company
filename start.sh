@@ -1,4 +1,6 @@
 #!/bin/bash
+supervisorctl stop FlaskGunicornSupervisor
+supervisord -c /etc/supervisord.conf 
 set -x
 ROOT=$(cd `dirname $0`; pwd)
 cd $ROOT
