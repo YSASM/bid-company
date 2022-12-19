@@ -73,6 +73,7 @@ class Detail(object):
 class ListData(object):
     def __init__(self):
         self.name = '-'
+        self.logo = '-'
         self.old_name = '-'
         self.registration_status = '-'
         self.corporate_representative = '-'
@@ -97,6 +98,7 @@ class ListData(object):
     def bejson(self,data):
         return {
             'name' :data.name,
+            'logo' :data.logo,
             'old_name' : data.old_name,
             'registration_status' : data.registration_status,
             'corporate_representative' : data.corporate_representative,

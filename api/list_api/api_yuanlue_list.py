@@ -6,6 +6,7 @@ class YuanlueList(object):
     def run(self,words,list_):
         company = self.cd.get_by_id(words)
         data = ListData()
+        data.logo = company.logo
         data.name = company.name
         data.old_name = company.old_name
         data.registration_status = company.registration_status

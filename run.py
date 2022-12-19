@@ -199,3 +199,5 @@ class Main(object):
             data = {"code":0,"msg":"操作成功"}
         except:data = {"code":1,"msg":"操作失败"}
         return jsonify(data)
+if __name__ == "__main__":
+    api.run(port=9252,host='0.0.0.0')
