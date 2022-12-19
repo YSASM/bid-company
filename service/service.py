@@ -151,7 +151,6 @@ class Service(object):
             return ren
         detail.words = words
         for i in self.detail:
-            self.send_alarm("123",i[0]+i[2])
             if i[2] == "2":
                 continue
             detail.error = ""
@@ -235,6 +234,7 @@ class Service(object):
         return ren
     def get(self,method,words,ip,start,type='',**kwarg):
         if method == 'detail':
+            self.reload_d()
             return self.get_detail(method,start,words,ip,**kwarg)
         elif method == 'list':
             return self.get_list(method,start,words,ip,type)
@@ -403,7 +403,6 @@ class Service(object):
             f = open('base/on_off.json','w')
             f.write(json.dumps(old))
             f.close()
-            self.reload_d()
             return "操作成功",200
         except Exception as e:
             return str(e),500
