@@ -176,16 +176,16 @@
       end = start+86400
       // layer.msg(end)
       errortable.reloadData('errortable', {
-        url:'/statistics?method=error&start='+String(start)+'&end='+String(end)
+        url:'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/statistics?method=error&start='+String(start)+'&end='+String(end)
       })
       wordstable.reloadData('wordstable', {
-        url:'/statistics?method=words&start='+String(start)+'&end='+String(end)
+        url:'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/statistics?method=words&start='+String(start)+'&end='+String(end)
       })
       addresstable.reloadData('addresstable', {
-        url:'/statistics?method=address&start='+String(start)+'&end='+String(end)
+        url:'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/statistics?method=address&start='+String(start)+'&end='+String(end)
       })
       timetable.reloadData('timetable', {
-        url:'/statistics?method=time&start='+String(start)+'&end='+String(end)
+        url:'http://9252.gr984e2a.i8tkcg64.786129.grapps.cn/statistics?method=time&start='+String(start)+'&end='+String(end)
       })
 	  });
   });

@@ -50,6 +50,9 @@ api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
 CORS(api, supports_credentials=True, resources=r"/*")
 class Main(object):
     s = service.Service()
+    @api.route('/',methods=['get']) 
+    def help():
+        return render_template('help.html')
     @api.route('/base/on_off.json',methods=['get']) 
     def on_off_json():
         f = open('base/on_off.json','r')
@@ -196,3 +199,5 @@ class Main(object):
             data = {"code":0,"msg":"操作成功"}
         except:data = {"code":1,"msg":"操作失败"}
         return jsonify(data)
+if __name__ == "__main__":
+    api.run(port=9252,host='0.0.0.0')

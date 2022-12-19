@@ -94,10 +94,6 @@ class Main(object):
             logintoken.append([token,t])
             return token
         return False
-
-    @api.route('/',methods=['get']) 
-    def help():
-        return render_template('help.html')
     @api.route("/loginout",methods=["POST"])
     def loginout():
         session.clear()
