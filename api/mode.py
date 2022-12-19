@@ -13,6 +13,7 @@ def sort_data(data,words):
     return data
 def re_registered_capital(s):
     try:
+        s = s.replace("万元人民币","万人民币")
         s_l = s.split('万')
         if len(s_l)<=1:
             return s
