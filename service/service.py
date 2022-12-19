@@ -151,6 +151,7 @@ class Service(object):
             return ren
         detail.words = words
         for i in self.detail:
+            self.send_alarm("123",i[0]+i[2])
             if i[2] == "2":
                 continue
             detail.error = ""
