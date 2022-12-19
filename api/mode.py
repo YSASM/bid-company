@@ -21,7 +21,7 @@ def re_registered_capital(s):
         if num<1:
             if s_l[1] == '':
                 s_l[1] = '人民币'
-                return s_l[0] +'万'+s_l[1]
+                return round(float(s_l[0]),3) +'万'+s_l[1]
             return s
         num = round(num,3)
         if s_l[1] == '':
