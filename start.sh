@@ -3,6 +3,7 @@ set -x
 ROOT=$(cd `dirname $0`; pwd)
 cd $ROOT
 mv /app/status.sh /usr/bin/api_status
+mv /app/restart.sh /usr/bin/api_restart
 # /usr/bin/python3 /app/run.py
 echo "[program:Flask]" >> /etc/supervisord.conf
 echo "command=/usr/local/python-3.9/bin/gunicorn -w 5 -b 0.0.0.0:9252 run:api" >> /etc/supervisord.conf
