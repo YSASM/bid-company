@@ -226,8 +226,8 @@ class Service(object):
                     self.add_company_list(list)
                 else:
                     self.update_company_list(list)
-        except:
-            self.send_alarm('get_list','add sql error!')
+        except Exception as e:
+            self.send_alarm('get_list','add sql error:'+str(e))
         ren = list.bejson(list)
         if write_log:
             self.add_log(self.request_time(start),ren,method)
