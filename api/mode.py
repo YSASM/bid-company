@@ -21,13 +21,12 @@ def re_registered_capital(s):
         if num<1:
             if s_l[1] == '':
                 s_l[1] = '人民币'
-                return round(float(s_l[0]),3) +'万'+s_l[1]
-            return s
+            return str(round(float(s_l[0]),3)) +'万'+s_l[1]
         num = round(num,3)
         if s_l[1] == '':
             s_l[1] = '人民币'
         return str(num)+'亿'+s_l[1]
-    except:
+    except Exception as e:
         return s
 class DetailData(object):
     def __init__(self):
