@@ -425,7 +425,7 @@ class Service(object):
             d = detail['data'][0]
             start = int(float(time.time())*1000)
             self.get_list('list',start,d['keyNo'],ip,detail['type'],write_log=False)
-        count = 5
+        count = 10
         while not data["keyNo"]:
             if count <= 0:
                 break

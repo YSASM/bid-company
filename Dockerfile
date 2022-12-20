@@ -7,4 +7,5 @@ RUN chmod +x /app/status.sh
 RUN chmod +x /app/api_restart.sh
 RUN chmod +x /app/api_getid_restart.sh
 EXPOSE 9252
+EXPOSE 9259
 CMD ["/app/start.sh"]
