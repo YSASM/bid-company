@@ -44,10 +44,7 @@ def del_log_run(day):
     logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
     ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
 api = Flask(__name__) 
-api.config['SECRET_KEY']=os.urandom(24)
-# session.permanent=True
-api.config['PERMANENT_SESSION_LIFETIME']=datetime.timedelta(days=7)
-CORS(api, supports_credentials=True, resources=r"/*")
+api_getid = Flask(__name__) 
 class Main(object):
     s = service.Service()
     @api.route('/',methods=['get']) 
@@ -173,7 +170,7 @@ class Main(object):
         if page and limit and pd:
             ren = Main.pagedown(ren,page,limit)
         return jsonify(ren)
-    @api.route('/getid',methods=['get'])
+    @api_getid.route('/getid',methods=['get'])
     def getid():
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         words = request.args.get('words')
