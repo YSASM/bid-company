@@ -44,6 +44,7 @@ def del_log_run(day):
     logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
     ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
 api = Flask(__name__) 
+CORS(api, supports_credentials=True, resources=r"/*")
 api_getid = Flask(__name__) 
 class Main(object):
     s = service.Service()
