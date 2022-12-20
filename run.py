@@ -1,22 +1,16 @@
 #!/usr/bin/python3
 # encoding:utf-8
-import json,logging,hashlib,os,datetime,base64
+import json,logging
 from logging import handlers
-import waitress
-from time import time,sleep,strftime,localtime
+from time import time,strftime,localtime
 import traceback
-from flask import Flask, render_template, request, jsonify,session,redirect,url_for,make_response
+from flask import Flask, render_template, request, jsonify
 from flask_cors import *
 from service import service
 from config import Config
 from api.mode import Detail,List
-from model.bid_admin import AdminDao,Admin
 from model.bid_company_log import CompanyLogDao
-from base.ansync_call import async_call
 from service.message import MessageService
-# from qqwry import updateQQwry
-# result = updateQQwry('base/qqwry.dat')
-logintoken = []
 logger = logging.getLogger()
 for h in logger.handlers:
     logger.removeHandler(h)
@@ -35,14 +29,6 @@ else:
     console_handler.setLevel(logging.ERROR)
 console_handler.setFormatter(logging.Formatter(fmt))
 logger.addHandler(console_handler)
-def del_log_run(day):
-    ms = MessageService()
-    cl = CompanyLogDao()
-    logger.info("【del_log】开始清理")
-    t = int(time())-(day*86400)
-    cl.del_old(t)
-    logger.info('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
-    ms.send_text('【del_log】删除了company_log%s前的日志' % str(strftime("%Y-%m-%d %H:%M:%S", localtime(t))))
 api = Flask(__name__) 
 CORS(api, supports_credentials=True, resources=r"/*")
 api_getid = Flask(__name__) 
@@ -188,14 +174,6 @@ class Main(object):
         ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         words = request.args.get('words')
         data = Main.s.get_xingtu_simple(words,ip)
-        return jsonify(data)
-    @api.route('/del_log',methods=['get'])
-    def del_company_log():
-        day = request.args.get('day')
-        try:
-            del_log_run(day=day)
-            data = {"code":0,"msg":"操作成功"}
-        except:data = {"code":1,"msg":"操作失败"}
         return jsonify(data)
 if __name__ == "__main__":
     api.run(port=9252,host='0.0.0.0')

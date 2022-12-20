@@ -4,13 +4,11 @@ import json,logging,hashlib,os,datetime,base64
 from logging import handlers
 import waitress
 from time import time,sleep,strftime,localtime
-import traceback
-from flask import Flask, render_template, request, jsonify,session,redirect,url_for,make_response
+from flask import Flask, render_template, request, session,redirect,url_for,make_response
 from flask_cors import *
 from service import service
 from config import Config
-from api.mode import Detail,List
-from model.bid_admin import AdminDao,Admin
+from model.bid_admin import AdminDao
 from model.bid_company_log import CompanyLogDao
 from base.ansync_call import async_call
 from service.message import MessageService
@@ -57,13 +55,7 @@ def del_log(day=7):
             daycount=0
         sleep(1)
         daycount+=1
-    
-    
-def run_api():
-    main = Main()
-    del_log()
-    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
-    waitress.serve(api, host='0.0.0.0', port='9258')# 启动服务
+
 class Main(object):
     ad = AdminDao()
     s = service.Service()
@@ -165,4 +157,7 @@ class Main(object):
             return res
         return redirect(url_for('login'))
 if __name__ == '__main__':
-    run_api()
+    main = Main()
+    del_log()
+    # main.api.run(port=9252,host='0.0.0.0') # 启动服务
+    waitress.serve(api, host='0.0.0.0', port='9258')# 启动服务
