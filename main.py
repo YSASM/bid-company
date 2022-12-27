@@ -158,6 +158,6 @@ class Main(object):
         return redirect(url_for('login'))
 if __name__ == '__main__':
     main = Main()
-    del_log()
+    del_log(day=2)
     # main.api.run(port=9252,host='0.0.0.0') # 启动服务
     waitress.serve(api, host='0.0.0.0', port='9258')# 启动服务
